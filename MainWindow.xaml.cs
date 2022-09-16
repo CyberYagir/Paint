@@ -44,17 +44,23 @@ namespace Paint
         {
             var framePos = (Vector)e.GetPosition(frame);
             var imagePos = (Vector)e.GetPosition(MainImage);
-            paintManager.Update(imagePos, framePos, ColorPicker.SelectedColor);
+            paintManager.Update(imagePos, framePos, ColorPicker.SelectedColor, e);
         }
 
         private void frame_MouseLeave(object sender, MouseEventArgs e)
         {
-            paintManager.SetState(PaintManager.State.Paint);
+            
+                paintManager.SetState(PaintManager.State.Paint);
         }
         
         private void frame_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             paintManager.Scale(e.Delta);
+
+        }
+
+        private void Window_LayoutUpdated(object sender, System.EventArgs e)
+        {
 
         }
     }

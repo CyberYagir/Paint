@@ -7,10 +7,12 @@
         xmlns:colorpicker="clr-namespace:ColorPicker;assembly=ColorPicker"
         x:Class="Paint.MainWindow"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" MouseMove="Window_MouseMove">
+        Title="MainWindow" Height="450" Width="800" MouseMove="Window_MouseMove" LayoutUpdated="Window_LayoutUpdated">
+    <Window.Background>
+        <ImageBrush ImageSource="Cheker.jpg" TileMode="Tile" ViewportUnits="Absolute" Viewport="0,0,32,32"/>
+    </Window.Background>
 
-
-    <Grid Background="#FF747474">
+    <Grid>
 
 
         <StackPanel HorizontalAlignment="Left" Width="126" Margin="0,18,0,-0.333" Background="#FF1E1E1E" Panel.ZIndex="1">
@@ -34,29 +36,28 @@
                 <MenuItem Header="Save as.." Background="#FF1E1E1E"/>
             </MenuItem>
         </Menu>
-        <Frame x:Name="frame" Margin="126,18,0.333,-0.333" MouseRightButtonDown="frame_MouseRightButtonDown" MouseRightButtonUp="frame_MouseRightButtonUp" Background="#FF6C4141" MouseLeave="frame_MouseLeave" MouseWheel="frame_MouseWheel" NavigationUIVisibility="Hidden" OpacityMask="Black">
-            <Frame.Content>
-                <Image x:Name="MainImage" Height="100" Width="100" RenderTransformOrigin="0.5,0.5" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Stretch="Fill" RenderOptions.BitmapScalingMode="NearestNeighbor">
-                    <Image.Effect>
-                        <DropShadowEffect ShadowDepth="0"/>
-                    </Image.Effect>
-                    <Image.RenderTransform>
-                        <TransformGroup>
-                            <ScaleTransform/>
-                            <SkewTransform/>
-                            <RotateTransform/>
-                            <TranslateTransform Y="-3"/>
-                        </TransformGroup>
-                    </Image.RenderTransform>
-                </Image>
-
-            </Frame.Content>
-        </Frame>
         <Border BorderBrush="Black" BorderThickness="1" Margin="126,0,0.333,0" VerticalAlignment="Top" Panel.ZIndex="1" Height="18">
             <Border.Effect>
                 <DropShadowEffect ShadowDepth="2"/>
             </Border.Effect>
         </Border>
+        <Grid x:Name="frame" Margin="126,18,0.333,-0.333" MouseRightButtonDown="frame_MouseRightButtonDown" MouseRightButtonUp="frame_MouseRightButtonUp" MouseWheel="frame_MouseWheel" MouseMove="Window_MouseMove" MouseLeave="frame_MouseLeave">
+
+
+            <Image x:Name="MainImage" Height="100" Width="100" RenderTransformOrigin="0.5,0.5" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Stretch="Fill" RenderOptions.BitmapScalingMode="NearestNeighbor">
+                <Image.Effect>
+                    <DropShadowEffect ShadowDepth="0"/>
+                </Image.Effect>
+                <Image.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform Y="-3"/>
+                    </TransformGroup>
+                </Image.RenderTransform>
+            </Image>
+        </Grid>
 
     </Grid>
 </Window>

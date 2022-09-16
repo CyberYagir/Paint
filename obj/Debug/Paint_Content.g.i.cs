@@ -8,7 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("jxcyzghvoaloax3pnm5wuvbx-fjznd_kjjh-wggajrjjtplchsj34_tj6-9mgtqyqkx-oq2ksqhav1u1i" +
-    "sujwdxt.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("cheker.jpg")]
 
 

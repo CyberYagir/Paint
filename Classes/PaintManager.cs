@@ -27,7 +27,7 @@ namespace Paint
         private Thickness imagePos = new Thickness();
 
         private Image mainImage;
-        private Frame frame;
+        private Grid frame;
         private float scale = 1f;
         private MainWindow window;
 
@@ -36,7 +36,7 @@ namespace Paint
 
         public float Zoom => scale;
 
-        public PaintManager(Image mainImage, Frame frame, MainWindow window)
+        public PaintManager(Image mainImage, Grid frame, MainWindow window)
         {
             this.mainImage = mainImage;
             this.window = window;
@@ -55,14 +55,17 @@ namespace Paint
         public void SetStartPos(Vector startFramePos) => this.startPos = startFramePos;
 
 
-        public void Update(Vector imageMousePos, Vector frameMousePos, Color color)
+        public void Update(Vector imageMousePos, Vector frameMousePos, Color color, MouseEventArgs e)
         {
             lastLocalImageMousePos = imageMousePos;
             lastLocalRectMousePos = frameMousePos;
             switch (state)
             {
                 case State.Paint:
-                    Draw(lastLocalImageMousePos, color);
+                    if (e.LeftButton == MouseButtonState.Pressed)
+                    {
+                        Draw(lastLocalImageMousePos, color);
+                    }
                     break;
                 case State.Moving:
                     Move(frameMousePos);
@@ -190,7 +193,7 @@ namespace Paint
                 {
                     scale = zoomStep;
                 }
-                else
+
                 {
                     var deltaVector = new Vector(initSize.X * scale, initSize.Y * scale) - oldScale;
 

@@ -112,5 +112,8 @@
   <ItemGroup>
     <Resource Include="jXCYZghVoalOAx3PnM5wuVbx-fjZnD_kjJh-wGgAJRjJtPLchSJ34_Tj6-9mgtqyQKX-oq2KSQhaV1U1IsUjWdxt.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Cheker.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
