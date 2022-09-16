@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -62,6 +63,22 @@ namespace Paint
         private void Window_LayoutUpdated(object sender, System.EventArgs e)
         {
 
+        }
+
+        private void FileContext(object sender, RoutedEventArgs e)
+        {
+            FileMenu.Visibility = Visibility.Visible;
+            double y = Mouse.GetPosition(this).Y;
+            if (y < menu.Height)
+            {
+                y = menu.Height;
+            }
+            FileMenu.Margin = new Thickness(Mouse.GetPosition(this).X, y, 0, 0);
+        }
+
+        private void FileMenu_MouseLeave(object sender, MouseEventArgs e)
+        {
+            (sender as StackPanel).Visibility = Visibility.Hidden;
         }
     }
 }

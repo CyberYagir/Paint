@@ -31,11 +31,13 @@
             </colorpicker:StandardColorPicker>
         </StackPanel>
         <Menu x:Name="menu" Height="18" VerticalAlignment="Top" Margin="-1,0,-0.667,0" Panel.ZIndex="2" Background="#FF333333" Foreground="#FF1E1E1E">
-            <MenuItem Header="File" Background="{x:Null}" Foreground="#FFE6E6E6" UseLayoutRounding="False">
-                <MenuItem Header="Open" Click="OpenFile" Background="#FF1E1E1E" Margin="0"/>
-                <MenuItem Header="Save as.." Background="#FF1E1E1E"/>
-            </MenuItem>
+            <MenuItem Header="File" Background="{x:Null}" Foreground="#FFE6E6E6" UseLayoutRounding="False" Click="FileContext" BorderBrush="{x:Null}"/>
         </Menu>
+        <StackPanel x:Name="FileMenu" HorizontalAlignment="Left" VerticalAlignment="Top" Panel.ZIndex="99" Margin="-123,-30,0,0" Background="#FF333333" MouseLeave="FileMenu_MouseLeave">
+            <Button x:Name="Openbtn" Content="Open" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FFE6E6E6" HorizontalContentAlignment="Left" Padding="1" Margin="6,0" Click="OpenFile"/>
+            <Button x:Name="Createbtn" Content="Create" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FFE6E6E6" HorizontalContentAlignment="Left" Padding="1" Margin="6,0"/>
+            <Button x:Name="Savebtn" Content="Save as" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FFE6E6E6" HorizontalContentAlignment="Left" Padding="1" Margin="6,0"/>
+        </StackPanel>
         <Border BorderBrush="Black" BorderThickness="1" Margin="126,0,0.333,0" VerticalAlignment="Top" Panel.ZIndex="1" Height="18">
             <Border.Effect>
                 <DropShadowEffect ShadowDepth="2"/>
