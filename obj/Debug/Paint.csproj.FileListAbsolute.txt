@@ -1,0 +1,15 @@
+C:\Users\Yaroslav\source\repos\Paint\bin\Debug\Paint.exe.config
+C:\Users\Yaroslav\source\repos\Paint\bin\Debug\Paint.exe
+C:\Users\Yaroslav\source\repos\Paint\bin\Debug\Paint.pdb
+C:\Users\Yaroslav\source\repos\Paint\obj\Debug\Paint.csproj.AssemblyReference.cache
+C:\Users\Yaroslav\source\repos\Paint\obj\Debug\MainWindow.g.cs
+C:\Users\Yaroslav\source\repos\Paint\obj\Debug\App.g.cs
+C:\Users\Yaroslav\source\repos\Paint\obj\Debug\Paint_MarkupCompile.cache
+C:\Users\Yaroslav\source\repos\Paint\obj\Debug\Paint_MarkupCompile.lref
+C:\Users\Yaroslav\source\repos\Paint\obj\Debug\MainWindow.baml
+C:\Users\Yaroslav\source\repos\Paint\obj\Debug\Paint.g.resources
+C:\Users\Yaroslav\source\repos\Paint\obj\Debug\Paint.Properties.Resources.resources
+C:\Users\Yaroslav\source\repos\Paint\obj\Debug\Paint.csproj.GenerateResource.cache
+C:\Users\Yaroslav\source\repos\Paint\obj\Debug\Paint.csproj.CoreCompileInputs.cache
+C:\Users\Yaroslav\source\repos\Paint\obj\Debug\Paint.exe
+C:\Users\Yaroslav\source\repos\Paint\obj\Debug\Paint.pdb
