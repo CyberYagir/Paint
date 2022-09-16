@@ -112,9 +112,7 @@ namespace Paint
                     pBackBuffer += column * 4;
 
                     // Compute the pixel's color.
-                    int color_data = color.R << 16; // R
-                    color_data |= color.G << 8;   // G
-                    color_data |= color.B << 0;   // B
+                    int color_data = ((color.A << 24) + (color.R << 16) + (color.G << 8) + color.B);
 
                     // Assign the color data to the pixel.
                     *((int*)pBackBuffer) = color_data;
@@ -146,6 +144,7 @@ namespace Paint
         public void UploadImage(WriteableBitmap bitmapImage)
         {
             this.bitmapImage = bitmapImage;
+
             scale = 1f;
 
 

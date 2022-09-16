@@ -18,13 +18,12 @@ namespace Paint
             paintManager = new PaintManager(MainImage, frame, this);
         }
 
-        internal void SetMainImage(BitmapImage bitmapImage)
+        internal void SetMainImage(WriteableBitmap bitmapImage)
         {
-            var writableBitMap = new WriteableBitmap(bitmapImage);
-            MainImage.Source = writableBitMap;
+            MainImage.Source = bitmapImage;
             MainImage.Width = bitmapImage.Width;
             MainImage.Height = bitmapImage.Height;
-            paintManager.UploadImage(writableBitMap);
+            paintManager.UploadImage(bitmapImage);
         }
 
 
