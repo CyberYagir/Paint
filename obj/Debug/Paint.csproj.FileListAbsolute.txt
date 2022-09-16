@@ -13,3 +13,8 @@ C:\Users\Yaroslav\source\repos\Paint\obj\Debug\Paint.csproj.GenerateResource.cac
 C:\Users\Yaroslav\source\repos\Paint\obj\Debug\Paint.csproj.CoreCompileInputs.cache
 C:\Users\Yaroslav\source\repos\Paint\obj\Debug\Paint.exe
 C:\Users\Yaroslav\source\repos\Paint\obj\Debug\Paint.pdb
+C:\Users\Yaroslav\source\repos\Paint\obj\Debug\Paint.csproj.CopyComplete
+C:\Users\Yaroslav\source\repos\Paint\bin\Debug\ColorPicker.dll
+C:\Users\Yaroslav\source\repos\Paint\bin\Debug\Microsoft.Xaml.Behaviors.dll
+C:\Users\Yaroslav\source\repos\Paint\bin\Debug\Microsoft.Xaml.Behaviors.pdb
+C:\Users\Yaroslav\source\repos\Paint\bin\Debug\Microsoft.Xaml.Behaviors.xml

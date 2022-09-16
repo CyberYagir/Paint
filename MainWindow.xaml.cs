@@ -24,7 +24,7 @@ namespace Paint
             MainImage.Source = writableBitMap;
             MainImage.Width = bitmapImage.Width;
             MainImage.Height = bitmapImage.Height;
-            paintManager.UploadImage(bitmapImage);
+            paintManager.UploadImage(writableBitMap);
         }
 
 
@@ -45,8 +45,7 @@ namespace Paint
         {
             var framePos = (Vector)e.GetPosition(frame);
             var imagePos = (Vector)e.GetPosition(MainImage);
-            paintManager.Update(imagePos, framePos);
-            label.Content = imagePos + "\n" + framePos + "\n" + paintManager.Zoom;
+            paintManager.Update(imagePos, framePos, ColorPicker.SelectedColor);
         }
 
         private void frame_MouseLeave(object sender, MouseEventArgs e)

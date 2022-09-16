@@ -19,8 +19,9 @@ namespace Paint
         }
 
         private State state;
+        Vector initSize;
 
-        private PixelColor[,] colors;
+
         WriteableBitmap bitmapImage = null;
         private Vector startPos;
         private Thickness imagePos = new Thickness();
@@ -54,14 +55,14 @@ namespace Paint
         public void SetStartPos(Vector startFramePos) => this.startPos = startFramePos;
 
 
-        public void Update(Vector imageMousePos, Vector frameMousePos)
+        public void Update(Vector imageMousePos, Vector frameMousePos, Color color)
         {
             lastLocalImageMousePos = imageMousePos;
             lastLocalRectMousePos = frameMousePos;
             switch (state)
             {
                 case State.Paint:
-                    Draw(lastLocalImageMousePos);
+                    Draw(lastLocalImageMousePos, color);
                     break;
                 case State.Moving:
                     Move(frameMousePos);
@@ -72,7 +73,7 @@ namespace Paint
         }
 
 
-        public void Draw(Vector imagePixel)
+        public void Draw(Vector imagePixel, Color color)
         {
             if (bitmapImage != null)
             {
@@ -82,31 +83,51 @@ namespace Paint
                 {
                     if (imagePixel.Y >= 0 && imagePixel.Y < bitmapImage.PixelHeight)
                     {
+                        DrawPixel(new Vector((int)imagePixel.X, (int)imagePixel.Y), color);
+                        //colors[] = new PixelColor(0, 0, 0, 255);
 
-                        colors[(int)imagePixel.X, (int)imagePixel.Y] = new PixelColor(0, 0, 0, 255);
-
-                        PutPixels(bitmapImage, colors, 0, 0);
-                        UploadImage(ConvertWriteableBitmapToBitmapImage(bitmapImage), true);
+                        //PutPixels(bitmapImage, colors, 0, 0);
+                        //UploadImage(ConvertWriteableBitmapToBitmapImage(bitmapImage), true);
                     }
                 }
             }
         }
-
-        public BitmapImage ConvertWriteableBitmapToBitmapImage(WriteableBitmap wbm)
+        public void DrawPixel(Vector pos, Color color)
         {
-            BitmapImage bmImage = new BitmapImage();
-            using (MemoryStream stream = new MemoryStream())
+            int column = (int)pos.X;
+            int row = (int)pos.Y;
+
+            try
             {
-                PngBitmapEncoder encoder = new PngBitmapEncoder();
-                encoder.Frames.Add(BitmapFrame.Create(wbm));
-                encoder.Save(stream);
-                bmImage.BeginInit();
-                bmImage.CacheOption = BitmapCacheOption.OnLoad;
-                bmImage.StreamSource = stream;
-                bmImage.EndInit();
-                bmImage.Freeze();
+                // Reserve the back buffer for updates.
+                bitmapImage.Lock();
+
+                unsafe
+                {
+                    // Get a pointer to the back buffer.
+                    IntPtr pBackBuffer = bitmapImage.BackBuffer;
+
+                    // Find the address of the pixel to draw.
+                    pBackBuffer += row * bitmapImage.BackBufferStride;
+                    pBackBuffer += column * 4;
+
+                    // Compute the pixel's color.
+                    int color_data = color.R << 16; // R
+                    color_data |= color.G << 8;   // G
+                    color_data |= color.B << 0;   // B
+
+                    // Assign the color data to the pixel.
+                    *((int*)pBackBuffer) = color_data;
+                }
+
+                // Specify the area of the bitmap that changed.
+                bitmapImage.AddDirtyRect(new Int32Rect(column, row, 1, 1));
             }
-            return bmImage;
+            finally
+            {
+                // Release the back buffer and make it available for display.
+                bitmapImage.Unlock();
+            }
         }
 
         public void Move(Vector frameMousePos)
@@ -122,26 +143,24 @@ namespace Paint
             mainImage.Margin = newPos;
         }
 
-        public void UploadImage(WriteableBitmap bitmapImage, bool notReset = false)
+        public void UploadImage(WriteableBitmap bitmapImage)
         {
+            this.bitmapImage = bitmapImage;
+            scale = 1f;
 
-            colors = new ArrayConverter<PixelColor>().TwoDimesional(GetPixels(bitmapImage), bitmapImage.PixelWidth, bitmapImage.PixelHeight);
-            if (!notReset)
+
+            initSize = new Vector(bitmapImage.PixelWidth, bitmapImage.PixelHeight);
+            while (mainImage.Width > window.ActualWidth)
             {
-                this.bitmapImage = bitmapImage;
-                scale = 1f;
-                while (mainImage.Width > window.ActualWidth)
-                {
-                    scale -= 0.01f;
-                    zoomStep -= 0.001f;
-                    mainImage.Width = colors.GetLength(0) * scale;
-                    mainImage.Height = colors.GetLength(1) * scale;
-                }
-                imagePos.Left = 0;
-                imagePos.Top -= mainImage.Height * 0.25f;
-
-                mainImage.Margin = imagePos;
+                scale -= 0.01f;
+                zoomStep -= 0.001f;
+                mainImage.Width = initSize.X * scale;
+                mainImage.Height = initSize.Y * scale;
             }
+            imagePos.Left = 0;
+            imagePos.Top -= mainImage.Height * 0.25f;
+
+            mainImage.Margin = imagePos;
         }
 
         public double Clamp(double val, double min, double max)
@@ -174,29 +193,15 @@ namespace Paint
                 }
                 else
                 {
-                    var deltaVector = new Vector(colors.GetLength(0) * scale, colors.GetLength(1) * scale) - oldScale;
+                    var deltaVector = new Vector(initSize.X * scale, initSize.Y * scale) - oldScale;
 
 
                     imagePos = new Thickness(imagePos.Left - (deltaVector.X / 2f), imagePos.Top - (deltaVector.Y / 2f), 0, 0);
                     mainImage.Margin = imagePos;
-                    mainImage.Width = colors.GetLength(0) * scale;
-                    mainImage.Height = colors.GetLength(1) * scale;
-
-
-
-                    //mainImage.BeginAnimation(Image.MarginProperty, thicknessAnimation);
-                    //Animation(colors.GetLength(0) * scale, (float)mainImage.Width, Image.WidthProperty);
-                    //Animation(colors.GetLength(1) * scale, (float)mainImage.Height, Image.HeightProperty);
+                    mainImage.Width = initSize.X * scale;
+                    mainImage.Height = initSize.Y * scale;
                 }
             }
-
-            //ThicknessAnimation thicknessAnimation = new ThicknessAnimation();
-            //thicknessAnimation.From = mainImage.Margin;
-            //thicknessAnimation.To = imagePos;
-            //thicknessAnimation.Duration = new Duration(TimeSpan.FromMilliseconds(350));
-
-
-            
         }
 
 
@@ -208,61 +213,6 @@ namespace Paint
             anim.Duration = new Duration(TimeSpan.FromMilliseconds(350));
             mainImage.BeginAnimation(property, anim);
 
-        }
-
-        public struct PixelColor
-        {
-            public byte Red;
-            public byte Green;
-            public byte Blue;
-            public byte Alpha;
-
-            public PixelColor(byte b, byte g, byte r, byte a)
-            {
-                Red = r;
-                Green = g;
-                Blue = b;
-                Alpha = a;
-            }
-
-            internal string Log()
-            {
-                return $"RGB({Red},{Green},{Blue},{Alpha})";
-            }
-        }
-
-
-        public List<PixelColor> GetPixels(BitmapSource source)
-        {
-            var bytes = GetBytesFromBitmapSource(source);
-            List<PixelColor> pixelColors = new List<PixelColor>(source.PixelHeight * source.PixelWidth);
-
-            for (int i = 0; i < bytes.Length; i += 4)
-            {
-                pixelColors.Add(new PixelColor(bytes[i + 0], bytes[i + 1], bytes[i + 2], bytes[i + 3]));
-            }
-            return pixelColors;
-        }
-
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        public static byte[] GetBytesFromBitmapSource(BitmapSource bmp)
-        {
-            int width = bmp.PixelWidth;
-            int height = bmp.PixelHeight;
-            int stride = width * ((bmp.Format.BitsPerPixel + 7) / 8);
-
-            var pixels = new byte[height * stride];
-
-            bmp.CopyPixels(pixels, stride, 0);
-
-            return pixels;
-        }
-
-        public void PutPixels(WriteableBitmap bitmap, PixelColor[,] pixels, int x, int y)
-        {
-            int width = pixels.GetLength(0);
-            int height = pixels.GetLength(1);
-            bitmap.WritePixels(new Int32Rect(0, 0, width, height), pixels, width * 4, x, y);
         }
     }
 }
