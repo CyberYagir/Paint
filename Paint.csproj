@@ -64,7 +64,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="MainWindow.xaml">
+    <Page Include="Forms\CreateAtlas.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Forms\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -75,7 +79,10 @@
     <Compile Include="Classes\ArrayConverter.cs" />
     <Compile Include="Classes\FilterGenerator.cs" />
     <Compile Include="Classes\Debug.cs" />
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Forms\CreateAtlas.xaml.cs">
+      <DependentUpon>CreateAtlas.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
@@ -110,10 +117,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="jXCYZghVoalOAx3PnM5wuVbx-fjZnD_kjJh-wGgAJRjJtPLchSJ34_Tj6-9mgtqyQKX-oq2KSQhaV1U1IsUjWdxt.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Cheker.jpg" />
+    <Resource Include="Images\Cheker.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

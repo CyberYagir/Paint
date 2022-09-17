@@ -1,7 +1,7 @@
-﻿using System.Windows;
+﻿using Paint.Forms;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace Paint
@@ -50,10 +50,10 @@ namespace Paint
 
         private void frame_MouseLeave(object sender, MouseEventArgs e)
         {
-            
-                paintManager.SetState(PaintManager.State.Paint);
+
+            paintManager.SetState(PaintManager.State.Paint);
         }
-        
+
         private void frame_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             paintManager.Scale(e.Delta);
@@ -79,6 +79,12 @@ namespace Paint
         private void FileMenu_MouseLeave(object sender, MouseEventArgs e)
         {
             (sender as StackPanel).Visibility = Visibility.Hidden;
+        }
+
+        private void Createbtn_Click(object sender, RoutedEventArgs e)
+        {
+            CreateAtlas createWindow = new CreateAtlas();
+            createWindow.ShowDialog();
         }
     }
 }
