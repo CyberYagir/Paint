@@ -27,7 +27,7 @@ namespace Paint
             {
                 var bitmap = new Bitmap(openFile.FileName);
 
-                Bitmap clone = new Bitmap(bitmap.Width, bitmap.Height, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+                Bitmap clone = new Bitmap(bitmap.Width, bitmap.Height, PixelFormat.Format32bppPArgb);
 
                 using (Graphics gr = Graphics.FromImage(clone))
                 {
@@ -58,6 +58,59 @@ namespace Paint
                 bitmapImage.Freeze();
 
                 return bitmapImage;
+            }
+        }
+
+        
+
+        public void SaveFile(System.Windows.Media.ImageSource source)
+        {
+            CreateThumbnail((BitmapSource)source);
+        }
+
+        void CreateThumbnail(BitmapSource image5)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = FilterGenerator.GenerateFilter("Formats", "jpg", "jpeg", "png", "bmp", "gif", "tiff", "wmp");
+            if ((bool)saveFileDialog.ShowDialog())
+            {
+
+                if (saveFileDialog.FileName != string.Empty)
+                {
+                    using (FileStream stream5 = new FileStream(saveFileDialog.FileName, FileMode.Create))
+                    {
+                        BitmapEncoder encoder5 = null;
+                        switch (saveFileDialog.FilterIndex)
+                        {
+                            case 0:
+                                encoder5 = new JpegBitmapEncoder();
+                                break;
+                            case 1:
+                                encoder5 = new JpegBitmapEncoder();
+                                break;
+                            case 2:
+                                encoder5 = new PngBitmapEncoder();
+                                break;
+                            case 3:
+                                encoder5 = new BmpBitmapEncoder();
+                                break;
+                            case 4:
+                                encoder5 = new GifBitmapEncoder();
+                                break;
+                            case 5:
+                                encoder5 = new TiffBitmapEncoder();
+                                break;
+                            case 6:
+                                encoder5 = new WmpBitmapEncoder();
+                                break;
+                        }
+
+                        encoder5.Frames.Add(BitmapFrame.Create(image5));
+                        encoder5.Save(stream5);
+
+
+                    }
+                }
             }
         }
     }

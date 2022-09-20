@@ -13,22 +13,48 @@
     </Window.Background>
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="234*"/>
+            <RowDefinition Height="187*"/>
+        </Grid.RowDefinitions>
 
 
-        <StackPanel HorizontalAlignment="Left" Width="126" Margin="0,18,0,-0.333" Background="#FF1E1E1E" Panel.ZIndex="1">
+        <StackPanel HorizontalAlignment="Left" Width="126" Margin="0,18,0,-0.333" Background="#FF1E1E1E" Panel.ZIndex="1" Grid.RowSpan="2">
             <StackPanel.Effect>
                 <DropShadowEffect ShadowDepth="1"/>
             </StackPanel.Effect>
-            <colorpicker:StandardColorPicker x:Name="ColorPicker" Height="224" Margin="0,0,-74,0" RenderTransformOrigin="0,0.5" PickerType="HSL" SelectedColor="White" UseHintColor="True" Foreground="#FFE6E6E6" Background="#FF1E1E1E">
-                <colorpicker:StandardColorPicker.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform ScaleX="0.63" ScaleY="0.63"/>
-                        <SkewTransform/>
-                        <RotateTransform/>
-                        <TranslateTransform Y="-70"/>
-                    </TransformGroup>
-                </colorpicker:StandardColorPicker.RenderTransform>
-            </colorpicker:StandardColorPicker>
+            <StackPanel Height="241">
+                <colorpicker:StandardColorPicker x:Name="ColorPicker" Height="224" Margin="0,0,-74,0" RenderTransformOrigin="0,0.5" PickerType="HSL" SelectedColor="White" UseHintColor="True" Foreground="#FFE6E6E6" Background="#FF1E1E1E">
+                    <colorpicker:StandardColorPicker.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleX="0.63" ScaleY="0.63"/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform Y="-70"/>
+                        </TransformGroup>
+                    </colorpicker:StandardColorPicker.RenderTransform>
+                </colorpicker:StandardColorPicker>
+            </StackPanel>
+            <StackPanel Height="79">
+                <Grid Height="100">
+                    <Border BorderBrush="#FFACACAC" BorderThickness="0.5,0.5,0,0.5" Background="White" Margin="6,0" VerticalAlignment="Top" Height="75"/>
+                    <Label x:Name="label" Content="Brush Size" Margin="6,0,6,74" VerticalAlignment="Top" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                    <Slider x:Name="slider" HorizontalAlignment="Center" VerticalAlignment="Top" Width="114" Margin="6,31,6,0" Maximum="400"/>
+                    <Label x:Name="label_Copy" Content="Size:" Margin="6,49,6,25" VerticalAlignment="Top"/>
+                </Grid>
+            </StackPanel>
+            <StackPanel Height="100">
+                <Grid Height="100">
+                    <Border BorderBrush="#FFACACAC" BorderThickness="0.5,0.5,0,0.5" Background="White" Margin="6,0" VerticalAlignment="Top" Height="75"/>
+                    <Label x:Name="label_Copy1" Content="Brush Type" Margin="6,0" VerticalAlignment="Top" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                    <Image x:Name="image" HorizontalAlignment="Left" Height="41" VerticalAlignment="Top" Width="41" Source="Brush1.png" Margin="69,28,0,0">
+                        <Image.Effect>
+                            <DropShadowEffect ShadowDepth="0"/>
+                        </Image.Effect>
+                    </Image>
+                    <Button x:Name="button" Content="Select" Margin="16,40,62,40"/>
+                </Grid>
+            </StackPanel>
         </StackPanel>
         <Menu x:Name="menu" Height="18" VerticalAlignment="Top" Margin="-1,0,-0.667,0" Panel.ZIndex="2" Background="#FF333333" Foreground="#FF1E1E1E">
             <MenuItem Header="File" Background="{x:Null}" Foreground="#FFE6E6E6" UseLayoutRounding="False" Click="FileContext" BorderBrush="{x:Null}"/>
@@ -36,14 +62,14 @@
         <StackPanel x:Name="FileMenu" HorizontalAlignment="Left" VerticalAlignment="Top" Panel.ZIndex="99" Margin="-123,-30,0,0" Background="#FF333333" MouseLeave="FileMenu_MouseLeave">
             <Button x:Name="Openbtn" Content="Open" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FFE6E6E6" HorizontalContentAlignment="Left" Padding="1" Margin="6,0" Click="OpenFile"/>
             <Button x:Name="Createbtn" Content="Create" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FFE6E6E6" HorizontalContentAlignment="Left" Padding="1" Margin="6,0" Click="Createbtn_Click"/>
-            <Button x:Name="Savebtn" Content="Save as" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FFE6E6E6" HorizontalContentAlignment="Left" Padding="1" Margin="6,0"/>
+            <Button x:Name="Savebtn" Content="Save as" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FFE6E6E6" HorizontalContentAlignment="Left" Padding="1" Margin="6,0" Click="Savebtn_Click"/>
         </StackPanel>
         <Border BorderBrush="Black" BorderThickness="1" Margin="126,0,0.333,0" VerticalAlignment="Top" Panel.ZIndex="1" Height="18">
             <Border.Effect>
                 <DropShadowEffect ShadowDepth="2"/>
             </Border.Effect>
         </Border>
-        <Grid x:Name="frame" Margin="126,18,0.333,-0.333" MouseRightButtonDown="frame_MouseRightButtonDown" MouseRightButtonUp="frame_MouseRightButtonUp" MouseWheel="frame_MouseWheel" MouseMove="Window_MouseMove" MouseLeave="frame_MouseLeave">
+        <Grid x:Name="frame" Margin="126,18,0.333,-0.333" MouseRightButtonDown="frame_MouseRightButtonDown" MouseRightButtonUp="frame_MouseRightButtonUp" MouseWheel="frame_MouseWheel" MouseMove="Window_MouseMove" MouseLeave="frame_MouseLeave" Grid.RowSpan="2" Background="#00000000">
 
 
             <Image x:Name="MainImage" Height="100" Width="100" RenderTransformOrigin="0.5,0.5" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Stretch="Fill" RenderOptions.BitmapScalingMode="NearestNeighbor">

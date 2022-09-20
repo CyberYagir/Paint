@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Paint.Classes;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -16,11 +17,11 @@ namespace Paint
         }
 
         private State state;
-        Vector initSize;
+        YVector initSize;
 
 
         WriteableBitmap bitmapImage = null;
-        private Vector startPos;
+        private YVector startPos;
         private Thickness imagePos = new Thickness();
 
         private Image mainImage;
@@ -28,8 +29,8 @@ namespace Paint
         private float scale = 1f;
         private MainWindow window;
 
-        Vector lastLocalImageMousePos;
-        Vector lastLocalRectMousePos;
+        YVector lastLocalImageMousePos;
+        YVector lastLocalRectMousePos;
 
         public float Zoom => scale;
 
@@ -49,10 +50,10 @@ namespace Paint
             }
             this.state = state;
         }
-        public void SetStartPos(Vector startFramePos) => this.startPos = startFramePos;
+        public void SetStartPos(YVector startFramePos) => this.startPos = startFramePos;
 
 
-        public void Update(Vector imageMousePos, Vector frameMousePos, Color color, MouseEventArgs e)
+        public void Update(YVector imageMousePos, YVector frameMousePos, Color color, MouseEventArgs e)
         {
             lastLocalImageMousePos = imageMousePos;
             lastLocalRectMousePos = frameMousePos;
@@ -73,7 +74,7 @@ namespace Paint
         }
 
 
-        public void Draw(Vector imagePixel, Color color)
+        public void Draw(YVector imagePixel, Color color)
         {
             if (bitmapImage != null)
             {
@@ -83,7 +84,7 @@ namespace Paint
                 {
                     if (imagePixel.Y >= 0 && imagePixel.Y < bitmapImage.PixelHeight)
                     {
-                        DrawPixel(new Vector((int)imagePixel.X, (int)imagePixel.Y), color);
+                        DrawPixel(imagePixel, color);
                         //colors[] = new PixelColor(0, 0, 0, 255);
 
                         //PutPixels(bitmapImage, colors, 0, 0);
@@ -92,10 +93,10 @@ namespace Paint
                 }
             }
         }
-        public void DrawPixel(Vector pos, Color color)
+        public void DrawPixel(YVector pos, Color color)
         {
-            int column = (int)pos.X;
-            int row = (int)pos.Y;
+            int column = pos.XInt;
+            int row = pos.YInt;
 
             try
             {
@@ -128,7 +129,7 @@ namespace Paint
             }
         }
 
-        public void Move(Vector frameMousePos)
+        public void Move(YVector frameMousePos)
         {
             mainImage.Margin = imagePos;
             var delta = startPos - frameMousePos;
@@ -146,13 +147,20 @@ namespace Paint
             this.bitmapImage = bitmapImage;
 
             scale = 1f;
+            zoomStep = 0.2f;
 
-
-            initSize = new Vector(bitmapImage.PixelWidth, bitmapImage.PixelHeight);
+            initSize = new YVector(bitmapImage.PixelWidth, bitmapImage.PixelHeight);
             while (mainImage.Width > window.ActualWidth)
             {
                 scale -= 0.01f;
                 zoomStep -= 0.001f;
+                mainImage.Width = initSize.X * scale;
+                mainImage.Height = initSize.Y * scale;
+            }
+            while (mainImage.Width < window.ActualWidth + 100)
+            {
+                scale += 0.01f;
+                zoomStep += 0.001f;
                 mainImage.Width = initSize.X * scale;
                 mainImage.Height = initSize.Y * scale;
             }

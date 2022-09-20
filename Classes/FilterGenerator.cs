@@ -9,15 +9,12 @@
     {
         public static string GenerateFilter(string name, params string[] formats)
         {
-            string result = $"{name}|";
-            if (formats.Length == 0)
-            {
-                return result + "*.*";
-            }
+            string result = $"";
             for (int i = 0; i < formats.Length; i++)
             {
-                result += $"*.{formats[i]};";
+                result += $"{formats[i]}|*.{formats[i]}|";
             }
+            result += "*.*|*.*";
             return result;
         }
     }

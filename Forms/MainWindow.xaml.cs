@@ -1,4 +1,5 @@
-﻿using Paint.Forms;
+﻿using Paint.Classes;
+using Paint.Forms;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -10,13 +11,17 @@ namespace Paint
     {
         private MenuManager menuManager;
         private PaintManager paintManager;
-
+        private LocalFileSystem localSystem;
+        private BrushesManager brushesManager;
 
         public MainWindow()
         {
             InitializeComponent();
+            localSystem = new LocalFileSystem();
+
             menuManager = new MenuManager(menu, this);
             paintManager = new PaintManager(MainImage, frame, this);
+            brushesManager = new BrushesManager(localSystem);
         }
 
         internal void SetMainImage(WriteableBitmap bitmapImage)
@@ -32,7 +37,7 @@ namespace Paint
 
         private void frame_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            var framePos = (Vector)e.GetPosition(frame);
+            var framePos = new YVector(e.GetPosition(frame));
             paintManager.SetStartPos(framePos);
             paintManager.SetState(PaintManager.State.Moving);
         }
@@ -43,8 +48,8 @@ namespace Paint
         }
         private void Window_MouseMove(object sender, MouseEventArgs e)
         {
-            var framePos = (Vector)e.GetPosition(frame);
-            var imagePos = (Vector)e.GetPosition(MainImage);
+            var framePos = new YVector(e.GetPosition(frame));
+            var imagePos = new YVector(e.GetPosition(MainImage));
             paintManager.Update(imagePos, framePos, ColorPicker.SelectedColor, e);
         }
 
@@ -83,8 +88,13 @@ namespace Paint
 
         private void Createbtn_Click(object sender, RoutedEventArgs e)
         {
-            CreateAtlas createWindow = new CreateAtlas();
+            CreateAtlas createWindow = new CreateAtlas(this);
             createWindow.ShowDialog();
+        }
+
+        private void Savebtn_Click(object sender, RoutedEventArgs e)
+        {
+            menuManager.SaveFile(MainImage.Source);
         }
     }
 }
