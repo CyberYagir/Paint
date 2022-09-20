@@ -152,32 +152,44 @@ namespace Paint
 
         public void UploadImage(WriteableBitmap bitmapImage)
         {
+            mainImage.BeginAnimation(Image.MarginProperty, null);
+            mainImage.BeginAnimation(Image.WidthProperty, null);
+            mainImage.BeginAnimation(Image.HeightProperty, null);
+
             this.bitmapImage = bitmapImage;
 
             scale = 1f;
             zoomStep = 0.2f;
 
             initSize = new YVector(bitmapImage.PixelWidth, bitmapImage.PixelHeight);
-            while (mainImage.Width > window.ActualWidth)
-            {
-                scale -= 0.01f;
-                zoomStep -= 0.001f;
-                mainImage.Width = initSize.X * scale;
-                mainImage.Height = initSize.Y * scale;
-            }
+            mainImage.InvalidateVisual();
 
-            if (mainImage.Width > 10)
+            bool isBigger = mainImage.Width > window.ActualWidth;
+
+            if (isBigger)
             {
-                while (mainImage.Width < window.ActualWidth + 100)
+                while (mainImage.Width > window.ActualWidth)
                 {
-                    scale += 0.01f;
-                    zoomStep += 0.001f;
+                    scale -= 0.01f;
+                    zoomStep -= 0.001f;
                     mainImage.Width = initSize.X * scale;
                     mainImage.Height = initSize.Y * scale;
                 }
             }
+            else
+            {
+                if (mainImage.Width > 10)
+                {
+                    while (mainImage.Width < window.ActualWidth + 100)
+                    {
+                        scale += 0.01f;
+                        zoomStep += 0.001f;
+                        mainImage.Width = initSize.X * scale;
+                        mainImage.Height = initSize.Y * scale;
+                    }
+                }
+            }
 
-            mainImage.InvalidateVisual();
 
 
             imagePos.Left = (frame.ActualWidth - (initSize.X * scale)) / 2f;
