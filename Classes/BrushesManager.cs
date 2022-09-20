@@ -6,7 +6,7 @@ using System.IO;
 
 namespace Paint.Classes
 {
-    class BrushesManager
+    public sealed class BrushesManager
     {
         [System.Serializable]
         public class Brush

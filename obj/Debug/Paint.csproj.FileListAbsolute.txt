@@ -37,8 +37,6 @@ C:\Users\Yaroslav\source\repos\Paint\bin\Debug\Data\Microsoft.Xaml.Behaviors.dll
 C:\Users\Yaroslav\source\repos\Paint\bin\Debug\Data\System.Numerics.Vectors.dll
 C:\Users\Yaroslav\source\repos\Paint\bin\Debug\Data\Microsoft.Xaml.Behaviors.pdb
 C:\Users\Yaroslav\source\repos\Paint\bin\Debug\Data\Microsoft.Xaml.Behaviors.xml
-C:\Users\Yaroslav\source\repos\Paint\obj\Debug\Forms\Brushes.g.cs
-C:\Users\Yaroslav\source\repos\Paint\obj\Debug\Forms\Brushes.baml
 C:\Users\Yaroslav\source\repos\Paint\bin\Debug\Data\System.Memory.dll
 C:\Users\Yaroslav\source\repos\Paint\bin\Debug\Data\System.Text.Json.dll
 C:\Users\Yaroslav\source\repos\Paint\bin\Debug\Data\System.Buffers.dll
@@ -48,3 +46,7 @@ C:\Users\Yaroslav\source\repos\Paint\bin\Debug\Data\Microsoft.Bcl.AsyncInterface
 C:\Users\Yaroslav\source\repos\Paint\obj\Debug\Paint.exe.config
 C:\Users\Yaroslav\source\repos\Paint\bin\Debug\Data\Newtonsoft.Json.dll
 C:\Users\Yaroslav\source\repos\Paint\bin\Debug\Data\Newtonsoft.Json.xml
+C:\Users\Yaroslav\source\repos\Paint\obj\Debug\Forms\BrushesWindow.g.cs
+C:\Users\Yaroslav\source\repos\Paint\obj\Debug\Forms\BrushesWindow.baml
+C:\Users\Yaroslav\source\repos\Paint\obj\Debug\Styles\Button.baml
+C:\Users\Yaroslav\source\repos\Paint\obj\Debug\App.baml

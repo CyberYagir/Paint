@@ -1,5 +1,6 @@
 ﻿using Paint.Classes;
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -85,15 +86,11 @@ namespace Paint
                     if (imagePixel.Y >= 0 && imagePixel.Y < bitmapImage.PixelHeight)
                     {
                         DrawPixel(imagePixel, color);
-                        //colors[] = new PixelColor(0, 0, 0, 255);
-
-                        //PutPixels(bitmapImage, colors, 0, 0);
-                        //UploadImage(ConvertWriteableBitmapToBitmapImage(bitmapImage), true);
                     }
                 }
             }
         }
-        public void DrawPixel(YVector pos, Color color)
+        public async void DrawPixel(YVector pos, Color color)
         {
             int column = pos.XInt;
             int row = pos.YInt;
@@ -118,7 +115,7 @@ namespace Paint
                     // Assign the color data to the pixel.
                     *((int*)pBackBuffer) = color_data;
                 }
-
+                await Task.Yield();
                 // Specify the area of the bitmap that changed.
                 bitmapImage.AddDirtyRect(new Int32Rect(column, row, 1, 1));
             }
@@ -129,17 +126,28 @@ namespace Paint
             }
         }
 
+        internal void ReducePos(YVector pixels)
+        {
+            mainImage.BeginAnimation(FrameworkElement.MarginProperty, null);
+            imagePos.Left -= pixels.X;
+            imagePos.Top -= pixels.Y;
+            mainImage.Margin = imagePos;
+        }
+
         public void Move(YVector frameMousePos)
         {
-            mainImage.Margin = imagePos;
-            var delta = startPos - frameMousePos;
+            if (notAnimated)
+            {
+                mainImage.Margin = imagePos;
+                var delta = startPos - frameMousePos;
 
-            var newPos = new Thickness(imagePos.Left - delta.X, imagePos.Top - delta.Y, 0, 0);
+                var newPos = new Thickness(imagePos.Left - delta.X, imagePos.Top - delta.Y, 0, 0);
 
-            newPos.Left = Clamp(newPos.Left, -(mainImage.Width - 10), (window.ActualWidth) - 150);
-            newPos.Top = Clamp(newPos.Top, -(mainImage.Height - 10), (window.ActualHeight) - 100);
-
-            mainImage.Margin = newPos;
+                newPos.Left = Clamp(newPos.Left, -(mainImage.Width - 10), (window.ActualWidth) - 150);
+                newPos.Top = Clamp(newPos.Top, -(mainImage.Height - 10), (window.ActualHeight) - 100);
+                mainImage.BeginAnimation(FrameworkElement.MarginProperty, null);
+                mainImage.Margin = newPos;
+            }
         }
 
         public void UploadImage(WriteableBitmap bitmapImage)
@@ -157,15 +165,23 @@ namespace Paint
                 mainImage.Width = initSize.X * scale;
                 mainImage.Height = initSize.Y * scale;
             }
-            while (mainImage.Width < window.ActualWidth + 100)
+
+            if (mainImage.Width > 10)
             {
-                scale += 0.01f;
-                zoomStep += 0.001f;
-                mainImage.Width = initSize.X * scale;
-                mainImage.Height = initSize.Y * scale;
+                while (mainImage.Width < window.ActualWidth + 100)
+                {
+                    scale += 0.01f;
+                    zoomStep += 0.001f;
+                    mainImage.Width = initSize.X * scale;
+                    mainImage.Height = initSize.Y * scale;
+                }
             }
-            imagePos.Left = 0;
-            imagePos.Top -= mainImage.Height * 0.25f;
+
+            mainImage.InvalidateVisual();
+
+
+            imagePos.Left = (frame.ActualWidth - (initSize.X * scale)) / 2f;
+            imagePos.Top = (frame.ActualHeight - (initSize.Y * scale)) / 2f;
 
             mainImage.Margin = imagePos;
         }
@@ -187,7 +203,7 @@ namespace Paint
 
         public void Scale(int delta)
         {
-            if (state == State.Paint)
+            if (state == State.Paint && notAnimated)
             {
                 if (mainImage.Source == null) return;
 
@@ -201,23 +217,35 @@ namespace Paint
 
                 {
                     var deltaVector = new Vector(initSize.X * scale, initSize.Y * scale) - oldScale;
+                    var newPos = new Thickness(imagePos.Left - (deltaVector.X / 2f), imagePos.Top - (deltaVector.Y / 2f), 0, 0);
+                    ThicknessAnimation thicknessAnimation = new ThicknessAnimation()
+                    {
+                        Duration = new Duration(TimeSpan.FromMilliseconds(animationTime)),
+                        From = imagePos,
+                        To = newPos
+                    };
+                    imagePos = newPos;
 
+                    notAnimated = false;
+                    mainImage.BeginAnimation(Image.MarginProperty, thicknessAnimation);
+                    Animation(Image.WidthProperty, mainImage.Width, initSize.X * scale);
+                    Animation(Image.HeightProperty, mainImage.Height, initSize.Y * scale);
 
-                    imagePos = new Thickness(imagePos.Left - (deltaVector.X / 2f), imagePos.Top - (deltaVector.Y / 2f), 0, 0);
-                    mainImage.Margin = imagePos;
-                    mainImage.Width = initSize.X * scale;
-                    mainImage.Height = initSize.Y * scale;
+                    //mainImage.Width = initSize.X * scale;
+                    //mainImage.Height = initSize.Y * scale;
                 }
             }
         }
 
-
-        public void Animation(float to, float from, DependencyProperty property)
+        float animationTime = 250;
+        bool notAnimated = true;
+        public void Animation(DependencyProperty property, double from, double to)
         {
             DoubleAnimation anim = new DoubleAnimation();
             anim.From = from;
             anim.To = to;
-            anim.Duration = new Duration(TimeSpan.FromMilliseconds(350));
+            anim.Duration = new Duration(TimeSpan.FromMilliseconds(animationTime));
+            anim.Completed += (a,g) => { notAnimated = true; };
             mainImage.BeginAnimation(property, anim);
 
         }

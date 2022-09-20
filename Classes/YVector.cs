@@ -1,8 +1,9 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 
 namespace Paint.Classes
 {
-    public class YVector
+    public class YVector: IFormattable
     {
         public double X { get; set; }
         public double Y { get; set; }
@@ -66,9 +67,24 @@ namespace Paint.Classes
             return new YVector(a.Vector/b);
         }
 
+        public static YVector operator /(YVector a, Vector b)
+        {
+            return new YVector(a.Vector.X / b.X, a.Vector.Y / b.Y);
+        }
+
         public static YVector operator *(YVector a, float b)
         {
             return new YVector(a.Vector * b);
+        }
+
+        public string ToString(string format, IFormatProvider formatProvider)
+        {
+            return $"Vector: {XFloat}, {YFloat}";
+        }
+
+        public override string ToString()
+        {
+            return $"{XFloat};{YFloat}";
         }
     }
 }

@@ -12,13 +12,13 @@ namespace Paint.Forms
     /// <summary>
     /// Логика взаимодействия для CreateAtlas.xaml
     /// </summary>
-    public partial class CreateAtlas : Window
+    public partial class CreateAtlasWindow : Window
     {
         MainWindow mainWindow;
 
         YVector size = new YVector();
 
-        public CreateAtlas(MainWindow main)
+        public CreateAtlasWindow(MainWindow main)
         {
             InitializeComponent();
             mainWindow = main;

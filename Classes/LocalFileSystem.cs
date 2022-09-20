@@ -6,7 +6,7 @@ using System.Windows.Media.Imaging;
 
 namespace Paint.Classes
 {
-    class LocalFileSystem
+    public sealed class LocalFileSystem
     {
         public string Root { get; private set; }
         public string FileSystemRoot { get; private set; }

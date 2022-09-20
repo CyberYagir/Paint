@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\Users\Yaroslav\source\repos\Paint\App.xaml
-3-777114909
+4172592494
 
-16283337532
+161824280422
 201843321465
-Forms\Brushes.xaml;Forms\CreateAtlas.xaml;Forms\MainWindow.xaml;
+Forms\BrushesWindow.xaml;Forms\CreateAtlas.xaml;Forms\MainWindow.xaml;Styles\Button.xaml;
 
-False
+True
 

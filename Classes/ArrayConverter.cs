@@ -2,7 +2,7 @@
 
 namespace Paint
 {
-    public class ArrayConverter<T>
+    public sealed class ArrayConverter<T>
     {
         public T[,] TwoDimesional(List<T> list, int width, int height)
         {

@@ -10,9 +10,9 @@ namespace Paint
 {
     public class MenuManager
     {
-        private Menu menu;
+        private Grid menu;
         private MainWindow mainWindow;
-        public MenuManager(Menu menu, MainWindow main)
+        public MenuManager(Grid menu, MainWindow main)
         {
             this.menu = menu;
             this.mainWindow = main;
@@ -68,8 +68,9 @@ namespace Paint
             CreateThumbnail((BitmapSource)source);
         }
 
-        void CreateThumbnail(BitmapSource image5)
+        void CreateThumbnail(BitmapSource source)
         {
+            if (source == null) return;
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = FilterGenerator.GenerateFilter("Formats", "jpg", "jpeg", "png", "bmp", "gif", "tiff", "wmp");
             if ((bool)saveFileDialog.ShowDialog())
@@ -77,38 +78,36 @@ namespace Paint
 
                 if (saveFileDialog.FileName != string.Empty)
                 {
-                    using (FileStream stream5 = new FileStream(saveFileDialog.FileName, FileMode.Create))
+                    using (FileStream stream = new FileStream(saveFileDialog.FileName, FileMode.Create))
                     {
-                        BitmapEncoder encoder5 = null;
+                        BitmapEncoder enc = null;
                         switch (saveFileDialog.FilterIndex)
                         {
                             case 0:
-                                encoder5 = new JpegBitmapEncoder();
+                                enc = new JpegBitmapEncoder();
                                 break;
                             case 1:
-                                encoder5 = new JpegBitmapEncoder();
+                                enc = new JpegBitmapEncoder();
                                 break;
                             case 2:
-                                encoder5 = new PngBitmapEncoder();
+                                enc = new PngBitmapEncoder();
                                 break;
                             case 3:
-                                encoder5 = new BmpBitmapEncoder();
+                                enc = new BmpBitmapEncoder();
                                 break;
                             case 4:
-                                encoder5 = new GifBitmapEncoder();
+                                enc = new GifBitmapEncoder();
                                 break;
                             case 5:
-                                encoder5 = new TiffBitmapEncoder();
+                                enc = new TiffBitmapEncoder();
                                 break;
                             case 6:
-                                encoder5 = new WmpBitmapEncoder();
+                                enc = new WmpBitmapEncoder();
                                 break;
                         }
 
-                        encoder5.Frames.Add(BitmapFrame.Create(image5));
-                        encoder5.Save(stream5);
-
-
+                        enc.Frames.Add(BitmapFrame.Create(source));
+                        enc.Save(stream);
                     }
                 }
             }
