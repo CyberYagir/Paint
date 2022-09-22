@@ -62,7 +62,7 @@
                 <DropShadowEffect ShadowDepth="2"/>
             </Border.Effect>
         </Border>
-        <Grid x:Name="frame" Margin="126,18,0.333,-0.333" MouseRightButtonDown="frame_MouseRightButtonDown" MouseRightButtonUp="frame_MouseRightButtonUp" MouseWheel="frame_MouseWheel" MouseMove="Window_MouseMove" MouseLeave="frame_MouseLeave" Grid.RowSpan="2" Background="#00000000">
+        <Grid x:Name="frame" Margin="126,18,0.333,-0.333" MouseRightButtonDown="frame_MouseRightButtonDown" MouseRightButtonUp="frame_MouseRightButtonUp" MouseWheel="frame_MouseWheel" MouseMove="Window_MouseMove" MouseLeave="frame_MouseLeave" Grid.RowSpan="2" Background="#00000000" MouseLeftButtonDown="frame_MouseLeftButtonDown">
 
 
             <Image x:Name="MainImage" Height="204" Width="280" RenderTransformOrigin="0.5,0.5" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Stretch="Fill" RenderOptions.BitmapScalingMode="NearestNeighbor">

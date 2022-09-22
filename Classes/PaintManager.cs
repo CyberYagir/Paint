@@ -1,6 +1,5 @@
 ﻿using Paint.Classes;
 using System;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -80,17 +79,66 @@ namespace Paint
             if (bitmapImage != null)
             {
                 imagePixel /= scale;
+                YVector pos = new YVector(imagePixel.X, imagePixel.Y);
 
-                if (imagePixel.X >= 0 && imagePixel.X < bitmapImage.PixelWidth)
+                bitmapImage.Lock();
+                var bitmap = window.CurrentBrush.BrushBitmapImage;
+                for (int x = -(int)bitmap.PixelWidth / 2; x < (bitmap.Width / 2) -1; x++)
                 {
-                    if (imagePixel.Y >= 0 && imagePixel.Y < bitmapImage.PixelHeight)
+                    for (int y = -(int)bitmap.Height / 2; y < (bitmap.Height / 2) -1; y++)
                     {
-                        DrawPixel(imagePixel, color);
+                        var forPos = new YVector(x, y);
+                        pos = imagePixel + forPos;
+                        if (pos.X >= 0 && pos.X < bitmapImage.PixelWidth)
+                        {
+                            if (pos.Y >= 0 && pos.Y < bitmapImage.PixelHeight)
+                            {
+                                var posOnBrush = forPos + new YVector(bitmap.PixelWidth / 2, bitmap.PixelHeight/2);
+
+                                var pixColorBrush = window.CurrentBrush.BrushImage.GetPixel(posOnBrush.XInt, posOnBrush.YInt);
+
+                                var colorBrush = Color.FromArgb(pixColorBrush.A, pixColorBrush.R, pixColorBrush.G, pixColorBrush.B);
+
+                                try
+                                {
+                                    // Reserve the back buffer for updates.
+
+                                    unsafe
+                                    {
+                                        IntPtr pBackBuffer = bitmapImage.BackBuffer;
+
+                                        byte* pBuff = (byte*)pBackBuffer.ToPointer();
+
+                                        var b = pBuff[4 * pos.XInt + (pos.YInt * bitmapImage.BackBufferStride)];
+                                        var g = pBuff[4 * pos.XInt + (pos.YInt * bitmapImage.BackBufferStride) + 1];
+                                        var r = pBuff[4 * pos.XInt + (pos.YInt * bitmapImage.BackBufferStride) + 2];
+                                        var a = pBuff[4 * pos.XInt + (pos.YInt * bitmapImage.BackBufferStride) + 3];
+
+                                        var imageColor = System.Drawing.Color.FromArgb(a, r, g, b);
+
+
+                                        var imageBrush = Color.FromArgb(imageColor.A, imageColor.R, imageColor.G, imageColor.B);
+
+
+                                        var final = Color.Add(imageBrush, colorBrush);
+                                        final.A = (byte)(imageBrush.A + colorBrush.A);
+
+                                        DrawPixel(pos, final);
+                                    }
+                                }
+                                finally
+                                {
+
+                                }
+                            }
+                        }
                     }
                 }
+                bitmapImage.Unlock();
             }
         }
-        public async void DrawPixel(YVector pos, Color color)
+
+        public void DrawPixel(YVector pos, Color color)
         {
             int column = pos.XInt;
             int row = pos.YInt;
@@ -98,7 +146,6 @@ namespace Paint
             try
             {
                 // Reserve the back buffer for updates.
-                bitmapImage.Lock();
 
                 unsafe
                 {
@@ -110,19 +157,17 @@ namespace Paint
                     pBackBuffer += column * 4;
 
                     // Compute the pixel's color.
-                    int color_data = ((color.A << 24) + (color.R << 16) + (color.G << 8) + color.B);
+                    int color_data = (color.A << 24) + (color.R << 16) + (color.G << 8) + color.B;
 
                     // Assign the color data to the pixel.
-                    *((int*)pBackBuffer) = color_data;
+                    *(int*)pBackBuffer = color_data;
                 }
-                await Task.Yield();
                 // Specify the area of the bitmap that changed.
                 bitmapImage.AddDirtyRect(new Int32Rect(column, row, 1, 1));
             }
             finally
             {
                 // Release the back buffer and make it available for display.
-                bitmapImage.Unlock();
             }
         }
 

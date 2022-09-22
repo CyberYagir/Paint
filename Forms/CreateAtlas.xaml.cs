@@ -1,6 +1,7 @@
 ﻿using Paint.Classes;
 using System;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
@@ -51,6 +52,7 @@ namespace Paint.Forms
                 pixels[i] = ((color.A << 24) + (color.R << 16) + (color.G << 8) + color.B);
             }
             bitmapImage.WritePixels(new Int32Rect(0, 0, size.XInt, size.YInt), pixels, bitmapImage.BackBufferStride, 0);
+
 
             mainWindow.SetMainImage(bitmapImage);
 

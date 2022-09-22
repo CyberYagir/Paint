@@ -30,6 +30,9 @@ namespace Paint.Classes
             [JsonIgnore]
             public string Name => name;
 
+
+
+
             public Brush() { }
 
             public Brush(string fileName, string brushName, LocalFileSystem localFileSystem)
@@ -46,6 +49,7 @@ namespace Paint.Classes
                 {
                     brush = new Bitmap(path);
                     BrushBitmapImage = new BitmapImage(new Uri(path));
+
                     return true;
                 }
                 return false;

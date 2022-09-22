@@ -103,6 +103,7 @@ namespace Paint
             var framePos = new YVector(e.GetPosition(frame));
             paintManager.SetStartPos(framePos);
             paintManager.SetState(PaintManager.State.Moving);
+
         }
         private void frame_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
@@ -132,6 +133,13 @@ namespace Paint
             paintManager.ReducePos(delta / 2f);
         }
 
+        private void frame_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var framePos = new YVector(e.GetPosition(frame));
+            var imagePos = new YVector(e.GetPosition(MainImage));
+            paintManager.Update(imagePos, framePos, ColorPicker.SelectedColor, e);
+        }
+
         #endregion
 
         #region SideMenu
@@ -154,6 +162,7 @@ namespace Paint
         #endregion
 
         #endregion
+
 
     }
 }
