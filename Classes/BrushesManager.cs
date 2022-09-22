@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Windows.Media.Imaging;
 
 namespace Paint.Classes
 {
@@ -21,33 +22,42 @@ namespace Paint.Classes
             private Bitmap brush;
             [JsonIgnore]
             public Bitmap BrushImage => brush;
+
+            [JsonIgnore]
+            public BitmapImage BrushBitmapImage { get; set; }
+            [JsonIgnore]
+            public string Path => imageName;
             [JsonIgnore]
             public string Name => name;
 
             public Brush() { }
 
-            public Brush(string fileName, string brushName)
+            public Brush(string fileName, string brushName, LocalFileSystem localFileSystem)
             {
                 name = brushName;
                 imageName = fileName;
-                LoadBrush(fileName);
+                LoadBrush(fileName, localFileSystem);
             }
 
-            public bool LoadBrush(string fileName)
+            public bool LoadBrush(string fileName, LocalFileSystem localFileSystem)
             {
-                if (File.Exists(fileName))
+                var path = System.IO.Path.GetFullPath(localFileSystem.GetFullPath(fileName));
+                if (File.Exists(path))
                 {
-                    brush = new Bitmap(fileName);
+                    brush = new Bitmap(path);
+                    BrushBitmapImage = new BitmapImage(new Uri(path));
                     return true;
                 }
                 return false;
             }
 
-            public bool LoadBrush()
+            public bool LoadBrush(LocalFileSystem localFileSystem)
             {
-                return LoadBrush(imageName);
+                return LoadBrush(imageName, localFileSystem);
             }
         }
+
+       
 
         private LocalFileSystem localFileSystem;
 
@@ -62,29 +72,28 @@ namespace Paint.Classes
             if (brushesCount == 0)
             {
                 var staticBrushPath = fileSystem.Resources["Brush1.png"];
-                CreateBrush(staticBrushPath, "Standard");
+                CreateBrush(localFileSystem.GetFullPath(staticBrushPath), "Standard");
             }
         }
 
+        public List<Brush> GetBrushes() => new List<Brush>(brushes);
 
         public int BrushesLoader()
         {
             var brushesFolders = Directory.GetDirectories(localFileSystem.GetFullPath(localFileSystem.BrushesPath));
-
             foreach (var folder in brushesFolders)
             {
-                var dataFile = folder + "data.json";
-
+                var dataFile = folder + "/data.json";
                 if (File.Exists(dataFile))
                 {
                     var data = JsonConvert.DeserializeObject<Brush>(File.ReadAllText(dataFile));
-                    if (data.LoadBrush())
+
+                    if (data.LoadBrush(localFileSystem))
                     {
                         brushes.Add(data);
                     }
                 }
             }
-
             return brushes.Count;
         }
 
@@ -94,9 +103,10 @@ namespace Paint.Classes
             if (brushes.Find(x => x.Name == brushName) == null)
             {
                 string path = $"{localFileSystem.GetFullPath(localFileSystem.BrushesPath)}/{brushName}";
+
+
                 var filePath = path + $"/{brushName}.png";
-                var brush = new Brush(fileName, brushName);
-                brushes.Add(brush);
+
 
                 Directory.CreateDirectory(path);
 
@@ -104,7 +114,12 @@ namespace Paint.Classes
                 {
                     File.Delete(filePath);
                 }
-                File.Copy(localFileSystem.GetFullPath(fileName), filePath);
+                File.Copy(fileName, filePath);
+
+
+                var brush = new Brush($"{localFileSystem.BrushesPath}/{brushName}/{brushName}.png", brushName, localFileSystem);
+                brushes.Add(brush);
+
                 try
                 {
                     var jsonBrush = JsonConvert.SerializeObject(brush);

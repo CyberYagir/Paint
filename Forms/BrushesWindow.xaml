@@ -7,10 +7,17 @@
         mc:Ignorable="d"
         Title="Brush Select" Height="460" Width="310" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
     <Grid Background="#FF1E1E1E">
-        <ScrollViewer Height="383" VerticalAlignment="Top"/>
-        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="23" Margin="10,393,0,0" TextWrapping="Wrap" Text="Unnamed" VerticalAlignment="Top" Width="120"/>
-        <Button x:Name="button" Content="Create" HorizontalAlignment="Left" VerticalAlignment="Top" Width="76" Margin="217,393,0,0" Height="23" Foreground="#FFE6E6E6"/>
-        <Button x:Name="button_Copy" Content="File..." HorizontalAlignment="Left" VerticalAlignment="Top" Width="77" Margin="135,393,0,0" Height="23" Foreground="#FFE6E6E6"/>
+        <ScrollViewer Height="383" VerticalAlignment="Top">
+            <StackPanel x:Name="List">
+                <Grid x:Name="Item" Height="100" Width="287" Background="#FF1E1E1E" MouseEnter="Item_MouseEnter" Visibility="Collapsed" MouseDown="Item_MouseDown">
+                    <Image x:Name="image" HorizontalAlignment="Left" Height="80" Width="80" VerticalAlignment="Center" Source="/Paint;component/Images/Brush1.png" Margin="10,10,0,10"/>
+                    <Label x:Name="label" Content="Label" HorizontalAlignment="Left" Margin="101,10,0,0" VerticalAlignment="Top" Width="176" Foreground="#FFE6E6E6"/>
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+        <TextBox x:Name="NameBrush" HorizontalAlignment="Left" Height="23" Margin="10,393,0,0" TextWrapping="Wrap" Text="Unnamed" VerticalAlignment="Top" Width="120"/>
+        <Button x:Name="CreateBrush" Content="Create" HorizontalAlignment="Left" VerticalAlignment="Top" Width="76" Margin="217,393,0,0" Height="23" Foreground="#FFE6E6E6" Click="CreateBrush_Click"/>
+        <Button x:Name="OpenBrush" Content="File..." HorizontalAlignment="Left" VerticalAlignment="Top" Width="77" Margin="135,393,0,0" Height="23" Foreground="#FFE6E6E6" Click="OpenBrush_Click"/>
 
     </Grid>
 </Window>

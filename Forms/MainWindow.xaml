@@ -41,7 +41,7 @@
                     <Border BorderBrush="#FFACACAC" BorderThickness="0.5,0.5,0,0.5" Background="White" Margin="6,0" VerticalAlignment="Top" Height="22"/>
                     <Label x:Name="label_Copy1" Content="Brush Type" Margin="6,0" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="9"/>
                     <Button x:Name="SelectBrushButton" Content="Select" Margin="6,27,76,56" Click="SelectBrushButton_Click" Foreground="#FFE6E6E6" Background="#FFF2F2F2"/>
-                    <Image x:Name="image" HorizontalAlignment="Left" Height="53" VerticalAlignment="Top" Width="52" Source="/Paint;component/Images/Brush1.png" Margin="64,5,0,0">
+                    <Image x:Name="BrushPreview" HorizontalAlignment="Left" Height="53" VerticalAlignment="Top" Width="52" Source="/Paint;component/Images/Brush1.png" Margin="64,5,0,0">
                         <Image.Effect>
                             <DropShadowEffect ShadowDepth="0"/>
                         </Image.Effect>
@@ -70,6 +70,7 @@
                     <DropShadowEffect ShadowDepth="0"/>
                 </Image.Effect>
             </Image>
+            <Image x:Name="BrushImage" RenderOptions.BitmapScalingMode="NearestNeighbor" HorizontalAlignment="Left" Height="128" Margin="0" VerticalAlignment="Top" Width="128" Source="/Paint;component/Images/Brush1.png"/>
         </Grid>
 
     </Grid>

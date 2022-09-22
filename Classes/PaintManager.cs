@@ -249,7 +249,7 @@ namespace Paint
             }
         }
 
-        float animationTime = 250;
+        public float animationTime { get; } = 250;
         bool notAnimated = true;
         public void Animation(DependencyProperty property, double from, double to)
         {

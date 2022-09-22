@@ -3,6 +3,7 @@ using Paint.Forms;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 
 namespace Paint
@@ -14,7 +15,21 @@ namespace Paint
         private LocalFileSystem localSystem;
         private BrushesManager brushesManager;
 
-        Vector windowSize;
+        BrushesManager.Brush brush;
+
+        public BrushesManager.Brush CurrentBrush
+        {
+            get
+            {
+                return brush;
+            }
+            set
+            {
+                brush = value;
+                BrushPreview.Source = value.BrushBitmapImage;
+                BrushImage.Source = value.BrushBitmapImage;
+            }
+        }
 
         public MainWindow()
         {
@@ -24,7 +39,8 @@ namespace Paint
             menuManager = new MenuManager(menu, this);
             paintManager = new PaintManager(MainImage, frame, this);
             brushesManager = new BrushesManager(localSystem);
-            windowSize = new Vector(this.ActualHeight, this.Height);
+
+            CurrentBrush = brushesManager.GetBrushes()[0];
         }
 
         #region Main
@@ -34,6 +50,19 @@ namespace Paint
             MainImage.Width = bitmapImage.Width;
             MainImage.Height = bitmapImage.Height;
             paintManager.UploadImage(bitmapImage);
+        }
+
+        public void SetBrushImage(YVector pos)
+        {
+
+            BrushImage.Width = brush.BrushImage.Width * paintManager.Zoom;
+            BrushImage.Height = brush.BrushImage.Height * paintManager.Zoom;
+            BrushImage.Opacity = ColorPicker.Color.A / 255;
+
+            if (pos != null)
+            {
+                BrushImage.Margin = new Thickness(pos.X - BrushImage.Width / 2f, pos.Y - BrushImage.Height / 2f, 0, 0);
+            }
         }
 
         #endregion
@@ -84,15 +113,16 @@ namespace Paint
             var framePos = new YVector(e.GetPosition(frame));
             var imagePos = new YVector(e.GetPosition(MainImage));
             paintManager.Update(imagePos, framePos, ColorPicker.SelectedColor, e);
+            SetBrushImage(new YVector(e.GetPosition(frame)));
         }
         private void frame_MouseLeave(object sender, MouseEventArgs e)
         {
-
             paintManager.SetState(PaintManager.State.Paint);
         }
         private void frame_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             paintManager.Scale(e.Delta);
+            SetBrushImage(new YVector(Mouse.GetPosition(frame)));
 
         }
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -117,7 +147,7 @@ namespace Paint
         #region BrushSelection
         private void SelectBrushButton_Click(object sender, RoutedEventArgs e)
         {
-            BrushesWindow brushesWindow = new BrushesWindow(brushesManager);
+            BrushesWindow brushesWindow = new BrushesWindow(brushesManager, localSystem, this);
             brushesWindow.ShowDialog();
         }
 
