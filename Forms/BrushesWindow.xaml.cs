@@ -83,14 +83,15 @@ namespace Paint.Forms
                     if (File.Exists(newBrushPath))
                     {
                         var bitmap = new BitmapImage(new System.Uri(newBrushPath));
-                        if (bitmap.Width != bitmap.Height)
+
+                        if ((int)bitmap.Width != (int)bitmap.Height)
                         {
                             MessageBox.Show("Upload an image with a 1:1 ratio!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                         else
-                        if (bitmap.Width > 512)
+                        if ((int)bitmap.Width > 512)
                         {
-                            MessageBox.Show("Image is too big!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            MessageBox.Show("Image is too big! 512 Max!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                         else
                         {

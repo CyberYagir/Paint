@@ -1,5 +1,6 @@
 ﻿using Paint.Classes;
 using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -73,7 +74,25 @@ namespace Paint
             }
         }
 
+        // A cache of all opacity values (0-255) scaled down to 0-1 for performance
+        private readonly float[] _opacities = Enumerable.Range(0, 256)
+                                              .Select(o => o / 255f)
+                                              .ToArray();
 
+        private Color AlphaComposite(Color c1, Color c2)
+        {
+            var opa1 = _opacities[c1.A];
+            var opa2 = _opacities[c2.A];
+            var ar = opa1 + opa2 - (opa1 * opa2);
+            var asr = opa2 / ar;
+            var a1 = 1 - asr;
+            var a2 = asr * (1 - opa1);
+            var ab = asr * opa1;
+            var r = (byte)(c1.R * a1 + c2.R * a2 + c2.R * ab);
+            var g = (byte)(c1.G * a1 + c2.G * a2 + c2.G * ab);
+            var b = (byte)(c1.B * a1 + c2.B * a2 + c2.B * ab);
+            return Color.FromArgb((byte)(ar * 255), r, g, b);
+        }
         public void Draw(YVector imagePixel, Color color)
         {
             if (bitmapImage != null)
@@ -96,8 +115,8 @@ namespace Paint
                                 var posOnBrush = forPos + new YVector(bitmap.PixelWidth / 2, bitmap.PixelHeight/2);
 
                                 var pixColorBrush = window.CurrentBrush.BrushImage.GetPixel(posOnBrush.XInt, posOnBrush.YInt);
-
-                                var colorBrush = Color.FromArgb(pixColorBrush.A, pixColorBrush.R, pixColorBrush.G, pixColorBrush.B);
+                                //colorBrush
+                                var c0 = Color.FromArgb((byte)(pixColorBrush.A * (color.A/255f)), color.R, color.G, color.B);
 
                                 try
                                 {
@@ -114,21 +133,20 @@ namespace Paint
                                         var r = pBuff[4 * pos.XInt + (pos.YInt * bitmapImage.BackBufferStride) + 2];
                                         var a = pBuff[4 * pos.XInt + (pos.YInt * bitmapImage.BackBufferStride) + 3];
 
-                                        var imageColor = System.Drawing.Color.FromArgb(a, r, g, b);
+                                        //ImageColor
+                                        var imageColor = Color.FromArgb(a, r, g, b);
 
+                                        //ImageBrush
+                                        var c1 = Color.FromArgb(imageColor.A, imageColor.R, imageColor.G, imageColor.B);
 
-                                        var imageBrush = Color.FromArgb(imageColor.A, imageColor.R, imageColor.G, imageColor.B);
-
-
-                                        var final = Color.Add(imageBrush, colorBrush);
-                                        final.A = (byte)(imageBrush.A + colorBrush.A);
+                                        var final = AlphaComposite(c1, c0);
 
                                         DrawPixel(pos, final);
                                     }
                                 }
-                                finally
+                                catch
                                 {
-
+                                    //ignore
                                 }
                             }
                         }
