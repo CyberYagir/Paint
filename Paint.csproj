@@ -108,6 +108,7 @@
     <Compile Include="Classes\FilterGenerator.cs" />
     <Compile Include="Classes\Debug.cs" />
     <Compile Include="Classes\LocalFileSystem.cs" />
+    <Compile Include="Classes\UndoRendo.cs" />
     <Compile Include="Classes\YVector.cs" />
     <Compile Include="Forms\BrushesWindow.xaml.cs">
       <DependentUpon>BrushesWindow.xaml</DependentUpon>
@@ -173,6 +174,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Shaders\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

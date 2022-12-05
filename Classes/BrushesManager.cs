@@ -9,6 +9,9 @@ namespace Paint.Classes
 {
     public sealed class BrushesManager
     {
+
+      
+
         [System.Serializable]
         public class Brush
         {
@@ -25,6 +28,10 @@ namespace Paint.Classes
 
             [JsonIgnore]
             public BitmapImage BrushBitmapImage { get; set; }
+            
+            [JsonIgnore]
+            public Bitmap BrushBitmapImageScaled { get; set; }
+
             [JsonIgnore]
             public string Path => imageName;
             [JsonIgnore]
@@ -61,12 +68,21 @@ namespace Paint.Classes
             }
         }
 
-       
+
+        private float brushScale = 0;
 
         private LocalFileSystem localFileSystem;
 
         private List<Brush> brushes = new List<Brush>();
 
+
+        public void ChangeBrushScale(float scale)
+        {
+            foreach (var brush in brushes)
+            {
+                ResizeBrush(brush, scale);
+            }
+        }
 
 
         public BrushesManager(LocalFileSystem fileSystem)
@@ -79,6 +95,15 @@ namespace Paint.Classes
                 CreateBrush(localFileSystem.GetFullPath(staticBrushPath), "Standard");
             }
         }
+
+        public Bitmap ResizeBrush(Brush brush, float scale)
+        {
+            var cloneImage = brush.BrushImage;
+            var scaled = new Bitmap(cloneImage, new Size((int)(cloneImage.Width * scale), (int)(cloneImage.Height*scale)));
+            brush.BrushBitmapImageScaled = scaled;
+            return scaled;
+        }
+
 
         public List<Brush> GetBrushes() => new List<Brush>(brushes);
 
@@ -95,6 +120,7 @@ namespace Paint.Classes
                     if (data.LoadBrush(localFileSystem))
                     {
                         brushes.Add(data);
+                        ResizeBrush(data, 1f);
                     }
                 }
             }
@@ -123,6 +149,7 @@ namespace Paint.Classes
 
                 var brush = new Brush($"{localFileSystem.BrushesPath}/{brushName}/{brushName}.png", brushName, localFileSystem);
                 brushes.Add(brush);
+                ResizeBrush(brush, 1f);
 
                 try
                 {

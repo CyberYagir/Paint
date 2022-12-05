@@ -5,7 +5,14 @@ namespace Paint
     {
         public static void Log(object obj)
         {
-            MessageBox.Show(obj.ToString());
+            if (obj != null)
+            {
+                MessageBox.Show(obj.ToString());
+            }
+            else
+            {
+                MessageBox.Show("NULL");
+            }
         }
     }
 }

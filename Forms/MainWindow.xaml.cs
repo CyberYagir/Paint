@@ -1,10 +1,13 @@
 ﻿using Paint.Classes;
 using Paint.Forms;
+using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 
 namespace Paint
 {
@@ -14,8 +17,11 @@ namespace Paint
         private PaintManager paintManager;
         private LocalFileSystem localSystem;
         private BrushesManager brushesManager;
+        private UndoRendo undoRendo;
 
         BrushesManager.Brush brush;
+
+        DispatcherTimer timer;
 
         public BrushesManager.Brush CurrentBrush
         {
@@ -39,24 +45,49 @@ namespace Paint
             menuManager = new MenuManager(menu, this);
             paintManager = new PaintManager(MainImage, frame, this);
             brushesManager = new BrushesManager(localSystem);
-
+            undoRendo = new UndoRendo(paintManager);
             CurrentBrush = brushesManager.GetBrushes()[0];
+
+            StartWindowConfiguration();
         }
 
+
+
+
+
+
+
         #region Main
-        internal void SetMainImage(WriteableBitmap bitmapImage)
+
+        public void StartWindowConfiguration()
+        {
+            timer = new DispatcherTimer();
+            timer.Interval = new System.TimeSpan(0, 0, 0, 0, 1);
+            timer.Tick += (a, e) =>
+            {
+                SetMainImage(CreateAtlasWindow.CreateBlank(new YVector(1000, 1000)));
+                timer.Stop();
+            };
+            timer.Start();
+
+            ColorPicker.SelectedColor = System.Windows.Media.Color.FromArgb(255, 0, 0, 0);
+
+        }
+
+        public void SetMainImage(WriteableBitmap bitmapImage)
         {
             MainImage.Source = bitmapImage;
             MainImage.Width = bitmapImage.Width;
             MainImage.Height = bitmapImage.Height;
             paintManager.UploadImage(bitmapImage);
+            undoRendo.Clear();
+            undoRendo.AddAction();
         }
 
         public void SetBrushImage(YVector pos)
         {
-
-            BrushImage.Width = brush.BrushImage.Width * paintManager.Zoom;
-            BrushImage.Height = brush.BrushImage.Height * paintManager.Zoom;
+            BrushImage.Width = brush.BrushBitmapImageScaled.Width * paintManager.Zoom;
+            BrushImage.Height = brush.BrushBitmapImageScaled.Height * paintManager.Zoom;
             BrushImage.Opacity = ColorPicker.Color.A / 255;
 
             if (pos != null)
@@ -72,14 +103,31 @@ namespace Paint
 
         private void FileContext(object sender, RoutedEventArgs e)
         {
-            FileMenu.Visibility = Visibility.Visible;
+            ShowContex(FileMenu);
+        }
+        private void EditContext(object sender, RoutedEventArgs e)
+        {
+            ShowContex(EditMenu);
+        }
+
+
+        public void ShowContex(StackPanel panel)
+        {
+            var stack = panel;
+            stack.Visibility = Visibility.Visible;
+            stack.Margin = new Thickness(Mouse.GetPosition(this).X, GetMenuHeight(), 0, 0);
+        }
+
+        public double GetMenuHeight()
+        {
             double y = Mouse.GetPosition(this).Y;
             if (y < menu.Height)
             {
                 y = menu.Height;
             }
-            FileMenu.Margin = new Thickness(Mouse.GetPosition(this).X, y, 0, 0);
+            return y;
         }
+
         private void FileMenu_MouseLeave(object sender, MouseEventArgs e)
         {
             (sender as StackPanel).Visibility = Visibility.Hidden;
@@ -109,6 +157,27 @@ namespace Paint
         {
             paintManager.SetState(PaintManager.State.Paint);
         }
+        public void AddAction()
+        {
+            undoRendo.AddAction();
+            UpdateUndoRendoDebug();
+        }
+        public void UpdateUndoRendoDebug()
+        {
+            var list = undoRendo.Bitmaps;
+            for (int i = 0; i < UndoRendoDebug.Children.Count; i++)
+            {
+                if (i < list.Count)
+                {
+                    (UndoRendoDebug.Children[i] as Image).Source = list[i];
+                }
+                else
+                {
+                    (UndoRendoDebug.Children[i] as Image).Source = null;
+                }
+            }
+        }
+
         private void Window_MouseMove(object sender, MouseEventArgs e)
         {
             var framePos = new YVector(e.GetPosition(frame));
@@ -140,14 +209,35 @@ namespace Paint
             paintManager.Update(imagePos, framePos, ColorPicker.SelectedColor, e);
         }
 
+        private void Undo_Click(object sender, RoutedEventArgs e)
+        {
+            undoRendo.Undo();
+            UpdateUndoRendoDebug();
+        }
+
         #endregion
 
         #region SideMenu
 
-        #region BrushSize
+        #region Brush
         private void slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            BrushSizeLabel.Content = "Brush Size: " + (int)BrushSizeSlider.Value;
+            BrushSizeLabel.Content = "Brush Size: " + (BrushSizeSlider.Value * 100f).ToString("F2") + "%";
+            
+        }
+        private void BrushSizeSlider_MouseUp(object sender, DragCompletedEventArgs e)
+        {
+            if (CurrentBrush != null)
+            {
+                brushesManager.ChangeBrushScale((float)BrushSizeSlider.Value);
+                BrushImage.Width = CurrentBrush.BrushBitmapImageScaled.Width;
+                BrushImage.Height = CurrentBrush.BrushBitmapImageScaled.Height;
+            }
+        }
+
+        private void ColorPicker_ColorChanged(object sender, RoutedEventArgs e)
+        {
+
         }
 
         #endregion
@@ -159,10 +249,28 @@ namespace Paint
             brushesWindow.ShowDialog();
         }
 
-        #endregion
+
+
+
 
         #endregion
 
+        #endregion
 
+        private void frame_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (paintManager.IsChanged)
+            {
+                timer = new DispatcherTimer();
+                timer.Interval = new TimeSpan(0, 0, 0, 0, 100);
+                timer.Tick += (a, g) =>
+                {
+                    AddAction();
+                    timer.Stop();
+                };
+
+                timer.Start();
+            }
+        }
     }
 }

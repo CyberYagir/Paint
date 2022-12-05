@@ -1,5 +1,6 @@
 ﻿using Paint.Classes;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -27,6 +28,9 @@ namespace Paint
 
         private Image mainImage;
         private Grid frame;
+
+        bool changed;
+
         private float scale = 1f;
         private MainWindow window;
 
@@ -34,6 +38,7 @@ namespace Paint
         YVector lastLocalRectMousePos;
 
         public float Zoom => scale;
+        public bool IsChanged => changed;
 
         public PaintManager(Image mainImage, Grid frame, MainWindow window)
         {
@@ -48,6 +53,10 @@ namespace Paint
             if (this.state == State.Moving && state == State.Paint)
             {
                 imagePos = mainImage.Margin;
+            }
+            if (state == State.Paint && changed)
+            {
+                changed = false;
             }
             this.state = state;
         }
@@ -97,12 +106,13 @@ namespace Paint
         {
             if (bitmapImage != null)
             {
+                changed = true;
                 imagePixel /= scale;
                 YVector pos = new YVector(imagePixel.X, imagePixel.Y);
 
                 bitmapImage.Lock();
-                var bitmap = window.CurrentBrush.BrushBitmapImage;
-                for (int x = -(int)bitmap.PixelWidth / 2; x < (bitmap.Width / 2) -1; x++)
+                var bitmap = window.CurrentBrush.BrushBitmapImageScaled;
+                for (int x = -(int)bitmap.Width / 2; x < (bitmap.Width / 2) -1; x++)
                 {
                     for (int y = -(int)bitmap.Height / 2; y < (bitmap.Height / 2) -1; y++)
                     {
@@ -112,9 +122,9 @@ namespace Paint
                         {
                             if (pos.Y >= 0 && pos.Y < bitmapImage.PixelHeight)
                             {
-                                var posOnBrush = forPos + new YVector(bitmap.PixelWidth / 2, bitmap.PixelHeight/2);
+                                var posOnBrush = forPos + new YVector(bitmap.Width / 2, bitmap.Height/2);
 
-                                var pixColorBrush = window.CurrentBrush.BrushImage.GetPixel(posOnBrush.XInt, posOnBrush.YInt);
+                                var pixColorBrush = window.CurrentBrush.BrushBitmapImageScaled.GetPixel(posOnBrush.XInt, posOnBrush.YInt);
                                 //colorBrush
                                 var c0 = Color.FromArgb((byte)(pixColorBrush.A * (color.A/255f)), color.R, color.G, color.B);
 
@@ -259,6 +269,19 @@ namespace Paint
             imagePos.Top = (frame.ActualHeight - (initSize.Y * scale)) / 2f;
 
             mainImage.Margin = imagePos;
+        }
+
+        public void SetWritableImage(WriteableBitmap bitmapImage)
+        {
+            this.bitmapImage = bitmapImage;
+            mainImage.Source = bitmapImage;
+        }
+
+        public WriteableBitmap GetBitMap()
+        {
+            bitmapImage = bitmapImage.Clone();
+            mainImage.Source = bitmapImage;
+            return bitmapImage.Clone();
         }
 
         public double Clamp(double val, double min, double max)

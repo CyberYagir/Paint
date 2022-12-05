@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Paint"
         xmlns:colorpicker="clr-namespace:ColorPicker;assembly=ColorPicker"
+        xmlns:Properties="clr-namespace:Paint.Properties"
         x:Class="Paint.MainWindow"
         mc:Ignorable="d"
         Title="Paint" Height="450" Width="800" MouseMove="Window_MouseMove" WindowStartupLocation="CenterScreen" SizeChanged="Window_SizeChanged" Icon="/Paint;component/Images/icon.ico">
@@ -18,7 +19,7 @@
                 <DropShadowEffect ShadowDepth="1"/>
             </StackPanel.Effect>
             <StackPanel Height="241">
-                <colorpicker:StandardColorPicker x:Name="ColorPicker" Height="224" Margin="0,0,-74,0" RenderTransformOrigin="0,0.5" PickerType="HSL" SelectedColor="White" UseHintColor="True" Foreground="#FFE6E6E6" Background="#FF1E1E1E">
+                <colorpicker:StandardColorPicker x:Name="ColorPicker" Height="224" Margin="0,0,-74,0" RenderTransformOrigin="0,0.5" PickerType="HSL" SelectedColor="White" UseHintColor="True" Foreground="#FFE6E6E6" Background="#FF1E1E1E" ColorChanged="ColorPicker_ColorChanged">
                     <colorpicker:StandardColorPicker.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform ScaleX="0.63" ScaleY="0.63"/>
@@ -33,7 +34,7 @@
                 <Grid Height="100">
                     <Border BorderBrush="#FFACACAC" BorderThickness="0.5,0.5,0,0.5" Background="White" Margin="6,0" VerticalAlignment="Top" Height="46"/>
                     <Label x:Name="BrushSizeLabel" Content="Brush Size" Margin="6,0" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="9" Height="19" Padding="5,3,5,5"/>
-                    <Slider x:Name="BrushSizeSlider" HorizontalAlignment="Center" VerticalAlignment="Top" Width="106" Margin="10,19,10,0" Maximum="400" Minimum="1" Value="25" ValueChanged="slider_ValueChanged"/>
+                    <Slider x:Name="BrushSizeSlider" HorizontalAlignment="Center" VerticalAlignment="Top" Width="106" Margin="10,19,10,0" Maximum="4" Minimum="0.1" ValueChanged="slider_ValueChanged" LargeChange="0.1" Thumb.DragCompleted="BrushSizeSlider_MouseUp" Value="1"/>
                 </Grid>
             </StackPanel>
             <StackPanel Height="100">
@@ -50,19 +51,24 @@
             </StackPanel>
         </StackPanel>
         <Grid x:Name="menu" Height="18" VerticalAlignment="Top" Margin="0" Panel.ZIndex="2" Background="#FF333333">
-            <Button x:Name="Openbtn_Copy" Content="Open" Background="{x:Null}" Foreground="#FFE6E6E6" Click="FileContext" SnapsToDevicePixels="True" ScrollViewer.VerticalScrollBarVisibility="Disabled" UseLayoutRounding="False" Width="40.667" Height="18" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="0"/>
+            <Button x:Name="Openbtn_Copy" Content="File" Background="{x:Null}" Foreground="#FFE6E6E6" Click="FileContext" SnapsToDevicePixels="True" ScrollViewer.VerticalScrollBarVisibility="Disabled" UseLayoutRounding="False" Width="40.667" Height="18" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="0"/>
+            <Button x:Name="Edit_btn" Content="Edit" Background="{x:Null}" Foreground="#FFE6E6E6" Click="EditContext" SnapsToDevicePixels="True" ScrollViewer.VerticalScrollBarVisibility="Disabled" UseLayoutRounding="False" Width="40.667" Height="18" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="0" Margin="40.667,0,0,0"/>
         </Grid>
         <StackPanel x:Name="FileMenu" HorizontalAlignment="Left" VerticalAlignment="Top" Panel.ZIndex="99" Margin="-123,-30,0,0" Background="#FF333333" MouseLeave="FileMenu_MouseLeave" Height="56" Width="55">
             <Button x:Name="Openbtn" Content="Open" Background="{x:Null}" Foreground="#FFE6E6E6" Click="OpenFile" SnapsToDevicePixels="True" VerticalContentAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Disabled" UseLayoutRounding="False"/>
             <Button x:Name="Createbtn" Content="Create" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FFE6E6E6" Click="Createbtn_Click" SnapsToDevicePixels="True" VerticalContentAlignment="Stretch"/>
             <Button x:Name="Savebtn" Content="Save as" Foreground="#FFE6E6E6" Click="Savebtn_Click" SnapsToDevicePixels="True" VerticalContentAlignment="Stretch"/>
         </StackPanel>
+        <StackPanel x:Name="EditMenu" HorizontalAlignment="Left" VerticalAlignment="Top" Panel.ZIndex="99" Margin="-190,-30,0,0" Background="#FF333333" MouseLeave="FileMenu_MouseLeave" Height="37" Width="55">
+            <Button x:Name="Undo" Content="Undo" Background="{x:Null}" Foreground="#FFE6E6E6" Click="Undo_Click" SnapsToDevicePixels="True" VerticalContentAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Disabled" UseLayoutRounding="False"/>
+            <Button x:Name="Rendo" Content="Rendo" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FFE6E6E6" Click="Createbtn_Click" SnapsToDevicePixels="True" VerticalContentAlignment="Stretch"/>
+        </StackPanel>
         <Border BorderBrush="Black" BorderThickness="1" Margin="126,0,0.333,0" VerticalAlignment="Top" Panel.ZIndex="1" Height="18">
             <Border.Effect>
                 <DropShadowEffect ShadowDepth="2"/>
             </Border.Effect>
         </Border>
-        <Grid x:Name="frame" Margin="126,18,0.333,-0.333" MouseRightButtonDown="frame_MouseRightButtonDown" MouseRightButtonUp="frame_MouseRightButtonUp" MouseWheel="frame_MouseWheel" MouseMove="Window_MouseMove" MouseLeave="frame_MouseLeave" Grid.RowSpan="2" Background="#00000000" MouseLeftButtonDown="frame_MouseLeftButtonDown">
+        <Grid x:Name="frame" Margin="126,18,0.333,-0.333" MouseRightButtonDown="frame_MouseRightButtonDown" MouseRightButtonUp="frame_MouseRightButtonUp" MouseWheel="frame_MouseWheel" MouseMove="Window_MouseMove" MouseLeave="frame_MouseLeave" Grid.RowSpan="2" Background="#00000000" MouseLeftButtonDown="frame_MouseLeftButtonDown" MouseLeftButtonUp="frame_MouseLeftButtonUp">
 
 
             <Image x:Name="MainImage" Height="204" Width="280" RenderTransformOrigin="0.5,0.5" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Stretch="Fill" RenderOptions.BitmapScalingMode="NearestNeighbor">
@@ -72,6 +78,19 @@
             </Image>
             <Image x:Name="BrushImage" RenderOptions.BitmapScalingMode="NearestNeighbor" HorizontalAlignment="Left" Height="128" Margin="0" VerticalAlignment="Top" Width="128" Source="/Paint;component/Images/Brush1.png"/>
         </Grid>
+        <StackPanel x:Name="UndoRendoDebug" Height="956" Margin="671,23,0,-558.333" VerticalAlignment="Top" Width="100" HorizontalAlignment="Right">
+            <Image x:Name="image" Height="100" Stretch="UniformToFill" Source="/Paint;component/Images/Brush1.png"/>
+            <Image x:Name="image_Copy" Height="100" Stretch="UniformToFill"/>
+            <Image x:Name="image_Copy1" Height="100" Stretch="UniformToFill"/>
+            <Image x:Name="image_Copy2" Height="100" Stretch="UniformToFill"/>
+            <Image x:Name="image_Copy3" Height="100" Stretch="UniformToFill"/>
+            <Image x:Name="image_Copy4" Height="100" Stretch="UniformToFill"/>
+            <Image x:Name="image_Copy5" Height="100" Stretch="UniformToFill"/>
+            <Image x:Name="image_Copy6" Height="100" Stretch="UniformToFill"/>
+            <Image x:Name="image_Copy7" Height="100" Stretch="UniformToFill"/>
+            <Image x:Name="image_Copy8" Height="100" Stretch="UniformToFill"/>
+            <Image x:Name="image_Copy9" Height="100" Stretch="UniformToFill"/>
+        </StackPanel>
 
     </Grid>
 </Window>

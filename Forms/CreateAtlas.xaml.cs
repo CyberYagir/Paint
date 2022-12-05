@@ -37,10 +37,8 @@ namespace Paint.Forms
             Close();
         }
 
-        private void Apply_Click(object sender, RoutedEventArgs e)
+        public static WriteableBitmap CreateBlank(YVector size)
         {
-            if (size.XInt == 0 && size.YInt == 0) return;
-
             WriteableBitmap bitmapImage =
                 new WriteableBitmap(size.XInt, size.YInt, 72, 72, PixelFormats.Pbgra32, null);
 
@@ -53,8 +51,13 @@ namespace Paint.Forms
             }
             bitmapImage.WritePixels(new Int32Rect(0, 0, size.XInt, size.YInt), pixels, bitmapImage.BackBufferStride, 0);
 
+            return bitmapImage;
+        }
 
-            mainWindow.SetMainImage(bitmapImage);
+        private void Apply_Click(object sender, RoutedEventArgs e)
+        {
+            if (size.XInt == 0 && size.YInt == 0) return;
+            mainWindow.SetMainImage(CreateBlank(size));
 
             Close();
         }
