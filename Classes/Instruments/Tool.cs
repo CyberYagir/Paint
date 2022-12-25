@@ -7,7 +7,7 @@ using System.Windows.Media.Imaging;
 
 namespace Paint.Classes.Instruments
 {
-    public abstract class Instrument: IPlugin
+    public abstract class Tool: IPlugin
     {
         protected string instrumentName;
 

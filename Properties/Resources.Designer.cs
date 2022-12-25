@@ -59,15 +59,5 @@ namespace Paint.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Byte[].
-        /// </summary>
-        public static byte[] StartBrushes {
-            get {
-                object obj = ResourceManager.GetObject("StartBrushes", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
     }
 }

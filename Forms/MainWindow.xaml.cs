@@ -15,7 +15,7 @@ namespace Paint
         public LocalFileSystem LocalSystem { get; private set; }
         public BrushesManager BrushesManager { get; private set; }
         public UndoRendo UndoRendo { get; private set; }
-        public InstrumentsLoader InstrumentsLoader { get; private set; }
+        public ToolsLoader InstrumentsLoader { get; private set; }
         public HotKeysManager KeysManager { get; private set; }
 
 
@@ -46,7 +46,7 @@ namespace Paint
             MenuManager = new MenuManager(this);
             PaintManager = new PaintManager(MainImage, frame, this);
 
-            InstrumentsLoader = new InstrumentsLoader(LocalSystem, this);
+            InstrumentsLoader = new ToolsLoader(LocalSystem, this);
 
             BrushesManager = new BrushesManager(LocalSystem);
             UndoRendo = new UndoRendo(PaintManager);

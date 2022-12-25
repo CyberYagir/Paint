@@ -68,9 +68,6 @@ namespace Paint.Classes
             }
         }
 
-
-        private float brushScale = 0;
-
         private LocalFileSystem localFileSystem;
 
         private List<Brush> brushes = new List<Brush>();

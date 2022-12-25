@@ -44,14 +44,8 @@ C:\Users\Yaroslav\source\repos\Paint\Program\Paint.pdb
 C:\Users\Yaroslav\source\repos\Paint\Program\ColorPicker.dll
 C:\Users\Yaroslav\source\repos\Paint\Program\Microsoft.Xaml.Behaviors.dll
 C:\Users\Yaroslav\source\repos\Paint\Program\Newtonsoft.Json.dll
-C:\Users\Yaroslav\source\repos\Paint\Program\StartBrushes.dll
 C:\Users\Yaroslav\source\repos\Paint\Program\System.Memory.dll
-C:\Users\Yaroslav\source\repos\Paint\Program\System.Numerics.Vectors.dll
-C:\Users\Yaroslav\source\repos\Paint\Program\System.Text.Json.dll
-C:\Users\Yaroslav\source\repos\Paint\Program\System.Buffers.dll
-C:\Users\Yaroslav\source\repos\Paint\Program\System.Text.Encodings.Web.dll
-C:\Users\Yaroslav\source\repos\Paint\Program\System.Threading.Tasks.Extensions.dll
-C:\Users\Yaroslav\source\repos\Paint\Program\Microsoft.Bcl.AsyncInterfaces.dll
 C:\Users\Yaroslav\source\repos\Paint\Program\Microsoft.Xaml.Behaviors.pdb
 C:\Users\Yaroslav\source\repos\Paint\Program\Microsoft.Xaml.Behaviors.xml
 C:\Users\Yaroslav\source\repos\Paint\Program\Newtonsoft.Json.xml
+C:\Users\Yaroslav\source\repos\Paint\Program\StandardTools.dll

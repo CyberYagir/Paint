@@ -21,6 +21,12 @@ namespace Paint.Classes
         public LocalFileSystem()
         {
             Root = System.AppDomain.CurrentDomain.BaseDirectory;
+
+            if (Directory.GetFiles(Root, "*.exe").Length == 0)
+            {
+                Root = Directory.GetParent(Root).FullName;
+            }
+
             FileSystemRoot = "/Assets/";
             BrushesPath = FileSystemRoot + "/Brushes";
             LocalResources = FileSystemRoot + "/LocalResources";
@@ -33,6 +39,7 @@ namespace Paint.Classes
             Directory.CreateDirectory(Root + LocalResources);
             Directory.CreateDirectory(Root + AddonsPath);
             Directory.CreateDirectory(Root + AddonsToolsPath);
+            Directory.CreateDirectory(Root + AddonsPluginsPath);
 
 
             LoadLocalResources();
@@ -59,7 +66,7 @@ namespace Paint.Classes
 
         public string GetFullPath(string path)
         {
-            return Root + path;
+            return Path.GetFullPath(Root + path);
         }
     }
 }

@@ -8,7 +8,7 @@
         xmlns:Properties="clr-namespace:Paint.Properties"
         x:Class="Paint.MainWindow"
         mc:Ignorable="d"
-        Title="Paint" Height="450" Width="800" MouseMove="Window_MouseMove" WindowStartupLocation="CenterScreen" SizeChanged="Window_SizeChanged" Icon="/Paint;component/Images/icon.ico" KeyDown="HotKeys">
+        Title="Sigma Paint" Height="450" Width="800" MouseMove="Window_MouseMove" WindowStartupLocation="CenterScreen" SizeChanged="Window_SizeChanged" Icon="/Paint;component/Images/icon.ico" KeyDown="HotKeys">
     <Window.Background>
         <ImageBrush ImageSource="../Images/Cheker.jpg" TileMode="Tile" ViewportUnits="Absolute" Viewport="0,0,32,32"/>
     </Window.Background>

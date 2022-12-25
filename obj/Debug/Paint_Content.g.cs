@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("plugins/startbrushes.dll")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("plugins/standardtools.dll")]
 
 

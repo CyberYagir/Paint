@@ -20,7 +20,7 @@ namespace Paint
         }
 
 
-        List<Instrument> instrumentsList = new List<Instrument>();
+        List<Tool> instrumentsList = new List<Tool>();
 
         string currentInstrument;
 
@@ -63,7 +63,7 @@ namespace Paint
             imagePos = mainImage.Margin;
         }
 
-        public void SetInstrumentsList(List<Instrument> instruments)
+        public void SetInstrumentsList(List<Tool> instruments)
         {
             instrumentsList = instruments;
             SetInstrument("Brush");

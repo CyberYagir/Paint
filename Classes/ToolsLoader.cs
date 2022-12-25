@@ -7,27 +7,27 @@ using System.Windows;
 
 namespace Paint.Classes
 {
-    public class InstrumentsLoader
+    public class ToolsLoader
     {
-        public class LoadedInstrumentData
+        public class LoadedToolData
         {
-            private List<Instrument> items = new List<Instrument>();
+            private List<Tool> items = new List<Tool>();
             private string file;
 
-            public LoadedInstrumentData(List<Instrument> instruments, string filePath)
+            public LoadedToolData(List<Tool> instruments, string filePath)
             {
                 items = instruments;
                 file = filePath;
             }
 
-            public List<Instrument> Items => items;
+            public List<Tool> Items => items;
             public string File => file;
         }
 
         const string PluginTypeName = "Paint.Classes.Instruments.IPlugin";
-        List<Instrument> instrumentsList = new List<Instrument>();
+        List<Tool> instrumentsList = new List<Tool>();
 
-        List<LoadedInstrumentData> loadedInstruments = new List<LoadedInstrumentData>();
+        List<LoadedToolData> loadedInstruments = new List<LoadedToolData>();
 
         string[] paths = new string[0];
 
@@ -38,21 +38,21 @@ namespace Paint.Classes
             paths = Directory.GetFiles(fileSystem.Root + fileSystem.AddonsToolsPath, "*.dll");
         }
 
-        public InstrumentsLoader(LocalFileSystem fileSystem, MainWindow mainWindow)
+        public ToolsLoader(LocalFileSystem fileSystem, MainWindow mainWindow)
         {
             Folder = fileSystem.Root + fileSystem.AddonsPath;
             FindFiles(fileSystem);
             if (paths.Length == 0)
             {
-                var standardBrushes = System.AppDomain.CurrentDomain.BaseDirectory + "/Bin/StartBrushes.dll";
+                var standardBrushes = System.AppDomain.CurrentDomain.BaseDirectory + "/Bin/StandardTools.dll";
                 if (File.Exists(standardBrushes))
                 {
-                    File.Copy(standardBrushes, fileSystem.Root + fileSystem.AddonsToolsPath + "/StartBrushes.dll");
+                    File.Copy(standardBrushes, fileSystem.Root + fileSystem.AddonsToolsPath + "/StandardTools.dll");
                     FindFiles(fileSystem);
                 }
                 else
                 {
-                    MessageBox.Show("Cant find standard brushes!", "Fatal Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Can't find .dll file of Standard Tools!", "Fatal Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     mainWindow.Close();
                     return;
                 }
@@ -61,21 +61,21 @@ namespace Paint.Classes
             for (int i = 0; i < paths.Length; i++)
             {
                 var items = LoadPluginsFromFile(paths[i]);
-                List<Instrument> loaded = new List<Instrument>();
+                List<Tool> loaded = new List<Tool>();
                 foreach (var plugin in items)
                 {
-                    var instrument = ((Instrument)plugin);
+                    var instrument = ((Tool)plugin);
                     instrument.Init(mainWindow);
                     instrumentsList.Add(instrument);
                     loaded.Add(instrument);
                 }
                 if (loaded.Count != 0)
-                    loadedInstruments.Add(new LoadedInstrumentData(loaded, paths[i]));
+                    loadedInstruments.Add(new LoadedToolData(loaded, paths[i]));
             }
         }
 
-        public List<Instrument> GetInstruments() => instrumentsList;
-        public List<LoadedInstrumentData> LoadedData() => loadedInstruments;
+        public List<Tool> GetInstruments() => instrumentsList;
+        public List<LoadedToolData> LoadedData() => loadedInstruments;
 
         private List<IPlugin> LoadPluginsFromFile(string fileName)
         {

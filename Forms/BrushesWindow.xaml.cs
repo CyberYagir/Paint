@@ -26,8 +26,19 @@ namespace Paint.Forms
             brushes = brushesManager;
             this.fileSystem = fileSystem;
             this.mainWindow = mainWindow;
-            DrawBrushes(brushes.GetBrushes(), fileSystem);
+            var brushesList = brushes.GetBrushes();
+            DrawBrushes(brushesList, fileSystem);
 
+            int offcet = 0;
+            string nameText = "";
+
+            do
+            {
+                nameText = "New_Brush_" + (brushesList.Count + offcet);
+                offcet++;
+            } while (brushesList.Find(x=>x.Name == nameText) != null);
+
+            NameBrush.Text = nameText;
         }
 
         public void DrawBrushes(List<BrushesManager.Brush> brushes, LocalFileSystem fileSystem)
@@ -113,6 +124,7 @@ namespace Paint.Forms
         private void OpenBrush_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.InitialDirectory = fileSystem.GetFullPath(fileSystem.BrushesPath);
             openFileDialog.Filter = FilterGenerator.GenerateFilter("File Type", "png");
             if ((bool)openFileDialog.ShowDialog())
             {
