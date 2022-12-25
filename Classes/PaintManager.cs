@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -114,8 +115,6 @@ namespace Paint
             return Color.FromArgb((byte)(ar * 255), r, g, b);
         }
 
-
-
         private void Fill(YVector imagePixel, Color color)
         {
             if (bitmapImage != null)
@@ -137,74 +136,6 @@ namespace Paint
                 fillInProcess = false;
             }
         }
-
-
-
-        private void FillRight(YVector pos, Color fillColor)
-        {
-            var currentPos = pos + YVector.Right;
-            if (CanDraw(currentPos))
-            {
-                for (int x = pos.XInt; x < bitmapImage.PixelWidth; x++)
-                {
-                    if (CanDraw(currentPos))
-                    {
-                        if (!LeftRightDrawUpDown(currentPos, fillColor)) break;
-                        DrawPixel(currentPos, fillColor);
-                        currentPos += YVector.Right;
-
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-            }
-        }
-
- 
-
-        private void FillLeft(YVector pos, Color fillColor)
-        {
-            var currentPos = pos + YVector.Left;
-            if (CanDraw(currentPos))
-            {
-                for (int x = pos.XInt; x > 0; x--)
-                {
-                    if (CanDraw(currentPos))
-                    {
-                        if (!LeftRightDrawUpDown(currentPos, fillColor)) break;
-
-                        DrawPixel(currentPos, fillColor);
-
-
-                        currentPos += YVector.Left;
-
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-            }
-        }
-
-        bool LeftRightDrawUpDown(YVector currentPos, Color fillColor)
-        {
-            if (!IsCanDraw(currentPos, fillColor))
-            {
-                return false;
-            }
-            else
-            {
-                FillUp(currentPos, fillColor, false);
-                FillDown(currentPos, fillColor, false);
-                FillLeft(currentPos, fillColor);
-                FillRight(currentPos, fillColor);
-                return true;
-            }
-        }
-
         bool IsCanDraw(YVector currentPos, Color fillColor)
         {
             var currentPixelColor = GetWritableBitmapColor(currentPos);
@@ -214,90 +145,7 @@ namespace Paint
             }
             return true;
         }
-
-        void FillDown(YVector pos, Color fillColor, bool startLeftRight)
-        {
-            for (int y = pos.YInt; y <= bitmapImage.PixelHeight; y++)
-            {
-                if (CanDraw(pos + YVector.Down))
-                {
-                    var nextPixelColor = GetWritableBitmapColor(pos + YVector.Down);
-                    if (nextPixelColor != fillColor)
-                    {
-                        DrawPixel(pos, fillColor);
-
-                        if (startLeftRight)
-                        {
-                            FillRight(pos, fillColor);
-                            FillLeft(pos, fillColor);
-                        }
-                        pos += YVector.Down;
-
-                        if (!IsCanDraw(pos, fillColor)){
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                else
-                {
-                    break;
-                }
-            }
-        }
-
-
-        void FillUp(YVector pos, Color fillColor, bool startLeftRight)
-        {
-            for (int y = pos.YInt; y >= 0; y--)
-            {
-                if (CanDraw(pos + YVector.Up))
-                {
-                    var nextPixelColor = GetWritableBitmapColor(pos + YVector.Up);
-                    if (nextPixelColor != fillColor)
-                    {
-                        DrawPixel(pos, fillColor);
-
-                        if (startLeftRight)
-                        {
-                            FillRight(pos, fillColor);
-                            FillLeft(pos, fillColor);
-                        }
-                        pos += YVector.Up;
-
-                        if (!IsCanDraw(pos, fillColor)){
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                else
-                {
-                    break;
-                }
-            }
-        }
-
-        private void FillWhile(YVector pos, Color fillColor)
-        {
-            if (CanDraw(pos))
-            {
-                var currentPixelColor = GetWritableBitmapColor(pos);
-                if (currentPixelColor != fillColor)
-                {
-                    FillDown(pos, fillColor, true);
-                    FillUp(pos, fillColor, true);
-                }
-            }
-        }
-
-        public bool CanDraw(YVector pos)
+        public bool CanDrawRect(YVector pos)
         {
             if (pos.X >= 0 && pos.X < bitmapImage.PixelWidth)
             {
@@ -308,6 +156,81 @@ namespace Paint
             }
             return false;
         }
+
+        public List<YVector> FillLine(YVector pos, YVector dir, Color fillColor)
+        {
+            var filled = new List<YVector>(1000);
+            while (CanDrawRect(pos + dir) && IsCanDraw(pos + dir, fillColor))
+            {
+                DrawPixel(pos, fillColor);
+                filled.Add(pos);
+                pos += dir;
+            }
+
+            return filled;
+        }
+
+        public void FillPart(YVector pos, Color fillColor, YVector dir)
+        {
+            var filledUp = FillLine(pos, dir, fillColor);
+            for (int i = 0; i < filledUp.Count; i++)
+            {
+                var filledUpNext = FillLine(filledUp[i], YVector.Right, fillColor);
+                var filledDownNext = FillLine(filledUp[i], YVector.Left, fillColor);
+
+
+
+                List<YVector> right1 = new List<YVector>(500);
+                List<YVector> right2 = new List<YVector>(500);
+
+                List<YVector> left1 = new List<YVector>(500);
+                List<YVector> left2 = new List<YVector>(500);
+
+                for (int j = 0; j < filledUpNext.Count; j++)
+                {
+                    right1 = FillLine(filledUpNext[j] + YVector.Up, YVector.Up, fillColor);
+                    left1 = FillLine(filledUpNext[j] + YVector.Down, YVector.Down, fillColor);
+
+                }
+
+                for (int j = 0; j < filledDownNext.Count; j++)
+                {
+                    right2 = FillLine(filledDownNext[j] + YVector.Up, YVector.Up, fillColor);
+                    left2 = FillLine(filledDownNext[j] + YVector.Down, YVector.Down, fillColor);
+                }
+                Fill(right1, left1);
+                Fill(right2, left2);
+
+
+
+                void Fill(List<YVector> right, List<YVector> left)
+                {
+                    for (int j = 0; j < right.Count; j++)
+                    {
+                        FillLine(right[j] + YVector.Right, YVector.Right, fillColor);
+                        FillLine(right[j] + YVector.Left, YVector.Left, fillColor);
+                    }
+                    for (int j = 0; j < left.Count; j++)
+                    {
+                        FillLine(left[j] + YVector.Right, YVector.Right, fillColor);
+                        FillLine(left[j] + YVector.Left, YVector.Left, fillColor);
+                    }
+                }
+            }
+        }
+
+        private void FillWhile(YVector pos, Color fillColor)
+        {
+            if (CanDrawRect(pos))
+            {
+                if (IsCanDraw(pos, fillColor))
+                {
+                    FillPart(pos, fillColor, YVector.Up);
+                    FillPart(pos, fillColor, YVector.Down);
+                }
+            }
+        }
+
 
 
         private float GetDeltaColors(Color c1, Color c2)
