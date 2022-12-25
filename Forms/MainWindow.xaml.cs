@@ -64,6 +64,8 @@ namespace Paint
 
         public void StartWindowConfiguration()
         {
+
+            FillImage.Visibility = Visibility.Hidden;
             timer = new DispatcherTimer();
             timer.Interval = new System.TimeSpan(0, 0, 0, 0, 1);
             timer.Tick += (a, e) =>
@@ -188,6 +190,10 @@ namespace Paint
             var imagePos = new YVector(e.GetPosition(MainImage));
             paintManager.Update(imagePos, framePos, ColorPicker.SelectedColor, e);
             SetBrushImage(new YVector(e.GetPosition(frame)));
+            if (isFillOn)
+            {
+                FillImage.Margin = BrushImage.Margin;
+            }
         }
         private void frame_MouseLeave(object sender, MouseEventArgs e)
         {
@@ -235,6 +241,9 @@ namespace Paint
             isFillOn = !isFillOn;
             FillIcon.Visibility = isFillOn ? Visibility.Visible : Visibility.Hidden;
             BrushImage.Visibility = isFillOn ? Visibility.Hidden : Visibility.Visible;
+
+            FillImage.Visibility = !isFillOn ? Visibility.Hidden : Visibility.Visible;
+
             if (paintManager.CurrentState == PaintManager.State.Fill && !isFillOn)
             {
                 paintManager.SetState(PaintManager.State.Paint);

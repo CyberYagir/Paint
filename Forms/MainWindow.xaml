@@ -79,6 +79,7 @@
                 </Image.Effect>
             </Image>
             <Image x:Name="BrushImage" RenderOptions.BitmapScalingMode="NearestNeighbor" HorizontalAlignment="Left" Height="128" Margin="0" VerticalAlignment="Top" Width="128" Source="/Paint;component/Images/Brush1.png"/>
+            <Image x:Name="FillImage" RenderOptions.BitmapScalingMode="NearestNeighbor" HorizontalAlignment="Left" Height="49" Margin="201,49,0,0" VerticalAlignment="Top" Width="49" Source="FillCursor.png"/>
         </Grid>
         <StackPanel x:Name="UndoRendoDebug" Height="956" Margin="671,23,0,-558.333" VerticalAlignment="Top" Width="100" HorizontalAlignment="Right" Visibility="Hidden">
             <Image x:Name="image" Height="100" Stretch="UniformToFill" Source="/Paint;component/Images/Brush1.png"/>

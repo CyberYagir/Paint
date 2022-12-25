@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("forms/1024px-toicon-icon-stone-fill.svg.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("forms/fillcursor.png")]
 
 
