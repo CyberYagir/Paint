@@ -178,5 +178,8 @@
   <ItemGroup>
     <Folder Include="Shaders\" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Forms\1024px-Toicon-icon-stone-fill.svg.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

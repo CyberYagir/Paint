@@ -1,6 +1,7 @@
 ﻿using Paint.Classes;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,7 +16,7 @@ namespace Paint
     {
         public enum State
         {
-            Paint, Moving
+            Paint, Moving, Fill
         }
 
         private State state;
@@ -37,9 +38,11 @@ namespace Paint
         YVector lastLocalImageMousePos;
         YVector lastLocalRectMousePos;
 
+        private bool fillInProcess;
+
         public float Zoom => scale;
         public bool IsChanged => changed;
-
+        public State CurrentState => state;
         public PaintManager(Image mainImage, Grid frame, MainWindow window)
         {
             this.mainImage = mainImage;
@@ -75,6 +78,12 @@ namespace Paint
                         Draw(lastLocalImageMousePos, color);
                     }
                     break;
+                case State.Fill:
+                    if (e.LeftButton == MouseButtonState.Pressed && !fillInProcess)
+                    {
+                        Fill(lastLocalImageMousePos, color);
+                    }
+                    break;
                 case State.Moving:
                     Move(frameMousePos);
                     break;
@@ -82,6 +91,8 @@ namespace Paint
                     break;
             }
         }
+
+
 
         // A cache of all opacity values (0-255) scaled down to 0-1 for performance
         private readonly float[] _opacities = Enumerable.Range(0, 256)
@@ -102,6 +113,242 @@ namespace Paint
             var b = (byte)(c1.B * a1 + c2.B * a2 + c2.B * ab);
             return Color.FromArgb((byte)(ar * 255), r, g, b);
         }
+
+
+
+        private void Fill(YVector imagePixel, Color color)
+        {
+            if (bitmapImage != null)
+            {
+                fillInProcess = true;
+
+                changed = true;
+                imagePixel /= scale;
+                
+                YVector pos = new YVector(imagePixel.X, imagePixel.Y);
+
+
+                bitmapImage.Lock();
+
+                FillWhile(pos, color);
+
+                bitmapImage.Unlock();
+
+                fillInProcess = false;
+            }
+        }
+
+
+
+        private void FillRight(YVector pos, Color fillColor)
+        {
+            var currentPos = pos + YVector.Right;
+            if (CanDraw(currentPos))
+            {
+                for (int x = pos.XInt; x < bitmapImage.PixelWidth; x++)
+                {
+                    if (CanDraw(currentPos))
+                    {
+                        if (!LeftRightDrawUpDown(currentPos, fillColor)) break;
+                        DrawPixel(currentPos, fillColor);
+                        currentPos += YVector.Right;
+
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+
+ 
+
+        private void FillLeft(YVector pos, Color fillColor)
+        {
+            var currentPos = pos + YVector.Left;
+            if (CanDraw(currentPos))
+            {
+                for (int x = pos.XInt; x > 0; x--)
+                {
+                    if (CanDraw(currentPos))
+                    {
+                        if (!LeftRightDrawUpDown(currentPos, fillColor)) break;
+
+                        DrawPixel(currentPos, fillColor);
+
+
+                        currentPos += YVector.Left;
+
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+
+        bool LeftRightDrawUpDown(YVector currentPos, Color fillColor)
+        {
+            if (!IsCanDraw(currentPos, fillColor))
+            {
+                return false;
+            }
+            else
+            {
+                FillUp(currentPos, fillColor, false);
+                FillDown(currentPos, fillColor, false);
+                FillLeft(currentPos, fillColor);
+                FillRight(currentPos, fillColor);
+                return true;
+            }
+        }
+
+        bool IsCanDraw(YVector currentPos, Color fillColor)
+        {
+            var currentPixelColor = GetWritableBitmapColor(currentPos);
+            if (currentPixelColor == fillColor)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        void FillDown(YVector pos, Color fillColor, bool startLeftRight)
+        {
+            for (int y = pos.YInt; y <= bitmapImage.PixelHeight; y++)
+            {
+                if (CanDraw(pos + YVector.Down))
+                {
+                    var nextPixelColor = GetWritableBitmapColor(pos + YVector.Down);
+                    if (nextPixelColor != fillColor)
+                    {
+                        DrawPixel(pos, fillColor);
+
+                        if (startLeftRight)
+                        {
+                            FillRight(pos, fillColor);
+                            FillLeft(pos, fillColor);
+                        }
+                        pos += YVector.Down;
+
+                        if (!IsCanDraw(pos, fillColor)){
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+
+
+        void FillUp(YVector pos, Color fillColor, bool startLeftRight)
+        {
+            for (int y = pos.YInt; y >= 0; y--)
+            {
+                if (CanDraw(pos + YVector.Up))
+                {
+                    var nextPixelColor = GetWritableBitmapColor(pos + YVector.Up);
+                    if (nextPixelColor != fillColor)
+                    {
+                        DrawPixel(pos, fillColor);
+
+                        if (startLeftRight)
+                        {
+                            FillRight(pos, fillColor);
+                            FillLeft(pos, fillColor);
+                        }
+                        pos += YVector.Up;
+
+                        if (!IsCanDraw(pos, fillColor)){
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+
+        private void FillWhile(YVector pos, Color fillColor)
+        {
+            if (CanDraw(pos))
+            {
+                var currentPixelColor = GetWritableBitmapColor(pos);
+                if (currentPixelColor != fillColor)
+                {
+                    FillDown(pos, fillColor, true);
+                    FillUp(pos, fillColor, true);
+                }
+            }
+        }
+
+        public bool CanDraw(YVector pos)
+        {
+            if (pos.X >= 0 && pos.X < bitmapImage.PixelWidth)
+            {
+                if (pos.Y >= 0 && pos.Y < bitmapImage.PixelHeight)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
+        private float GetDeltaColors(Color c1, Color c2)
+        {
+            var first = ((c1.R + c1.G + c1.B) / 3f)/255;
+            var second = ((c2.R + c2.G + c2.B) / 3f)/255;
+
+            if (c1.A != c2.A)
+            {
+                first = 0;
+                second = 1;
+            }
+
+            return Math.Abs(first - second);
+        }
+
+        public Color GetWritableBitmapColor(YVector pos)
+        {
+            try
+            {
+                unsafe
+                {
+                    IntPtr pBackBuffer = bitmapImage.BackBuffer;
+
+                    byte* pBuff = (byte*)pBackBuffer.ToPointer();
+
+                    var b = pBuff[4 * pos.XInt + (pos.YInt * bitmapImage.BackBufferStride)];
+                    var g = pBuff[4 * pos.XInt + (pos.YInt * bitmapImage.BackBufferStride) + 1];
+                    var r = pBuff[4 * pos.XInt + (pos.YInt * bitmapImage.BackBufferStride) + 2];
+                    var a = pBuff[4 * pos.XInt + (pos.YInt * bitmapImage.BackBufferStride) + 3];
+
+
+                    return Color.FromArgb(a, r, g, b);
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return Color.FromArgb(255, 255, 255, 255);
+        }
+
         public void Draw(YVector imagePixel, Color color)
         {
             if (bitmapImage != null)
@@ -134,17 +381,10 @@ namespace Paint
 
                                     unsafe
                                     {
-                                        IntPtr pBackBuffer = bitmapImage.BackBuffer;
 
-                                        byte* pBuff = (byte*)pBackBuffer.ToPointer();
-
-                                        var b = pBuff[4 * pos.XInt + (pos.YInt * bitmapImage.BackBufferStride)];
-                                        var g = pBuff[4 * pos.XInt + (pos.YInt * bitmapImage.BackBufferStride) + 1];
-                                        var r = pBuff[4 * pos.XInt + (pos.YInt * bitmapImage.BackBufferStride) + 2];
-                                        var a = pBuff[4 * pos.XInt + (pos.YInt * bitmapImage.BackBufferStride) + 3];
 
                                         //ImageColor
-                                        var imageColor = Color.FromArgb(a, r, g, b);
+                                        var imageColor = GetWritableBitmapColor(pos);
 
                                         //ImageBrush
                                         var c1 = Color.FromArgb(imageColor.A, imageColor.R, imageColor.G, imageColor.B);

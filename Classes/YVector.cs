@@ -20,6 +20,10 @@ namespace Paint.Classes
 
         public Vector Vector => new Vector(X, Y);
 
+        public static YVector Up = new YVector(0, -1);
+        public static YVector Down = new YVector(0, 1);
+        public static YVector Left = new YVector(-1, 0);
+        public static YVector Right = new YVector(1, 0);
 
         public YVector(double x, double y)
         {

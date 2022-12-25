@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("forms/62911-paintbrush-icon.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("forms/1024px-toicon-icon-stone-fill.svg.png")]
 
 

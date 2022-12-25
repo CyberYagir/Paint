@@ -18,6 +18,7 @@ namespace Paint
         private LocalFileSystem localSystem;
         private BrushesManager brushesManager;
         private UndoRendo undoRendo;
+        private bool isFillOn;
 
         BrushesManager.Brush brush;
 
@@ -36,6 +37,8 @@ namespace Paint
                 BrushImage.Source = value.BrushBitmapImage;
             }
         }
+        
+
 
         public MainWindow()
         {
@@ -155,7 +158,7 @@ namespace Paint
         }
         private void frame_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
-            paintManager.SetState(PaintManager.State.Paint);
+            paintManager.SetState(isFillOn ? PaintManager.State.Fill : PaintManager.State.Paint);
         }
         public void AddAction()
         {
@@ -164,6 +167,7 @@ namespace Paint
         }
         public void UpdateUndoRendoDebug()
         {
+            return;
             var list = undoRendo.Bitmaps;
             for (int i = 0; i < UndoRendoDebug.Children.Count; i++)
             {
@@ -187,7 +191,7 @@ namespace Paint
         }
         private void frame_MouseLeave(object sender, MouseEventArgs e)
         {
-            paintManager.SetState(PaintManager.State.Paint);
+            paintManager.SetState(isFillOn ? PaintManager.State.Fill : PaintManager.State.Paint);
         }
         private void frame_MouseWheel(object sender, MouseWheelEventArgs e)
         {
@@ -214,12 +218,33 @@ namespace Paint
             undoRendo.Undo();
             UpdateUndoRendoDebug();
         }
+        private void Rendo_Click(object sender, RoutedEventArgs e)
+        {
+            undoRendo.Rendo();
+            UpdateUndoRendoDebug();
+        }
 
         #endregion
 
         #region SideMenu
 
         #region Brush
+
+        private void FillButton_Click(object sender, RoutedEventArgs e)
+        {
+            isFillOn = !isFillOn;
+            FillIcon.Visibility = isFillOn ? Visibility.Visible : Visibility.Hidden;
+            BrushImage.Visibility = isFillOn ? Visibility.Hidden : Visibility.Visible;
+            if (paintManager.CurrentState == PaintManager.State.Fill && !isFillOn)
+            {
+                paintManager.SetState(PaintManager.State.Paint);
+            }
+            else if (paintManager.CurrentState == PaintManager.State.Paint && isFillOn)
+            {
+                paintManager.SetState(PaintManager.State.Fill);
+            }
+        }
+
         private void slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             BrushSizeLabel.Content = "Brush Size: " + (BrushSizeSlider.Value * 100f).ToString("F2") + "%";
@@ -272,5 +297,7 @@ namespace Paint
                 timer.Start();
             }
         }
+
+
     }
 }
