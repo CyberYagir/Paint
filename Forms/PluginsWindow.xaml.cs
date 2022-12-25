@@ -15,7 +15,7 @@ namespace Paint.Forms
         DisplayState state = DisplayState.All;
         public enum DisplayState
         {
-            All, Instruments, Plugins
+            All, Tools, Plugins
         }
 
         public PluginsWindow(MainWindow mainWindow, DisplayState state)
@@ -31,7 +31,7 @@ namespace Paint.Forms
         public void UpdateList()
         {
             listBox.Items.Clear();
-            if (state == DisplayState.All || state == DisplayState.Instruments)
+            if (state == DisplayState.All || state == DisplayState.Tools)
             {
                 foreach (var item in window.InstrumentsLoader.LoadedData())
                 {
@@ -77,10 +77,10 @@ namespace Paint.Forms
             switch (state)
             {
                 case DisplayState.All:
-                    state = DisplayState.Instruments;
+                    state = DisplayState.Tools;
                     Display.Content += "Tool";
                     break;
-                case DisplayState.Instruments:
+                case DisplayState.Tools:
                     state = DisplayState.Plugins;
                     Display.Content += "Plugins";
                     break;

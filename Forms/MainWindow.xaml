@@ -14,59 +14,6 @@
     </Window.Background>
 
     <Grid>
-        <StackPanel HorizontalAlignment="Left" Width="126" Margin="0,18,0,-0.333" Background="#FF1E1E1E" Panel.ZIndex="1" Grid.RowSpan="2">
-            <StackPanel.Effect>
-                <DropShadowEffect ShadowDepth="1"/>
-            </StackPanel.Effect>
-            <StackPanel Height="241">
-                <colorpicker:StandardColorPicker x:Name="ColorPicker" Height="224" Margin="0,0,-74,0" RenderTransformOrigin="0,0.5" PickerType="HSL" SelectedColor="White" UseHintColor="True" Foreground="#FFE6E6E6" Background="#FF1E1E1E">
-                    <colorpicker:StandardColorPicker.RenderTransform>
-                        <TransformGroup>
-                            <ScaleTransform ScaleX="0.63" ScaleY="0.63"/>
-                            <SkewTransform/>
-                            <RotateTransform/>
-                            <TranslateTransform Y="-70"/>
-                        </TransformGroup>
-                    </colorpicker:StandardColorPicker.RenderTransform>
-                </colorpicker:StandardColorPicker>
-            </StackPanel>
-            <StackPanel Height="50">
-                <Grid Height="100">
-                    <Border BorderBrush="#FFACACAC" BorderThickness="0.5,0.5,0,0.5" Background="White" Margin="6,0" VerticalAlignment="Top" Height="46"/>
-                    <Label x:Name="BrushSizeLabel" Content="Brush Size" Margin="6,0" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="9" Height="19" Padding="5,3,5,5"/>
-                    <Slider x:Name="BrushSizeSlider" HorizontalAlignment="Center" VerticalAlignment="Top" Width="106" Margin="10,19,10,0" Maximum="4" Minimum="0.1" ValueChanged="slider_ValueChanged" LargeChange="0.1" Thumb.DragCompleted="BrushSizeSlider_MouseUp" Value="1"/>
-                </Grid>
-            </StackPanel>
-            <StackPanel Height="61">
-                <Grid Height="100">
-                    <Border BorderBrush="#FFACACAC" BorderThickness="0.5,0.5,0,0.5" Background="White" Margin="6,0" VerticalAlignment="Top" Height="22"/>
-                    <Label x:Name="label_Copy1" Content="Brush Type" Margin="6,0" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="9"/>
-                    <Button x:Name="SelectBrushButton" Content="Select" Margin="6,27,76,56" Click="SelectBrushButton_Click" Foreground="#FFE6E6E6" Background="#FFF2F2F2"/>
-                    <Image x:Name="BrushPreview" HorizontalAlignment="Left" Height="53" VerticalAlignment="Top" Width="52" Source="/Paint;component/Images/Brush1.png" Margin="64,5,0,0">
-                        <Image.Effect>
-                            <DropShadowEffect ShadowDepth="0"/>
-                        </Image.Effect>
-                    </Image>
-                </Grid>
-            </StackPanel>
-            <StackPanel Height="50">
-                <Grid HorizontalAlignment="Left" Height="50" VerticalAlignment="Top" Width="126">
-                    <Button x:Name="FillButton" Margin="7,0,6,33" Foreground="White" Content="Fill" Click="FillButton_Click" RenderTransformOrigin="0.5,0.5">
-                        <Button.RenderTransform>
-                            <TransformGroup>
-                                <ScaleTransform/>
-                                <SkewTransform AngleY="-0.296"/>
-                                <RotateTransform/>
-                                <TranslateTransform Y="-0.217"/>
-                            </TransformGroup>
-                        </Button.RenderTransform>
-                    </Button>
-                    <Image x:Name="FillIcon" Margin="103,0,7,34" Source="/Paint;component/Images/Fill.png" Visibility="Hidden"/>
-                    <Slider x:Name="FillDelta" HorizontalAlignment="Center" VerticalAlignment="Top" Width="87" Margin="7,23,32,0" Maximum="254" ValueChanged="FillDelta_ValueChanged" Thumb.DragCompleted="BrushSizeSlider_MouseUp" SmallChange="1" Value="1"/>
-                    <Label x:Name="FillDeltaText" Content="0" HorizontalAlignment="Left" Margin="90,17,0,0" VerticalAlignment="Top" Foreground="White" Width="33" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                </Grid>
-            </StackPanel>
-        </StackPanel>
         <Menu x:Name="menu" Height="18" VerticalAlignment="Top" Background="#FF333333" Panel.ZIndex="4" Margin="0,0,0.333,0">
             <MenuItem Header="File" Height="18" Width="37" Foreground="White">
                 <MenuItem InputGestureText="Ctrl+O"  Header="Open.." Foreground="#FF0A0A0A" Click="OpenFile"/>
@@ -118,6 +65,61 @@
             <Image x:Name="image_Copy8" Height="100" Stretch="UniformToFill"/>
             <Image x:Name="image_Copy9" Height="100" Stretch="UniformToFill"/>
         </StackPanel>
+        <ScrollViewer Margin="0,18,0,-0.333" Background="#FF1E1E1E" HorizontalAlignment="Left" Width="126" VerticalScrollBarVisibility="Hidden">
+            <StackPanel HorizontalAlignment="Left" Width="126" Panel.ZIndex="1" CanVerticallyScroll="True" ScrollViewer.CanContentScroll="True" UseLayoutRounding="False" ScrollViewer.VerticalScrollBarVisibility="Hidden" Height="403" VerticalAlignment="Top">
+                <StackPanel.Effect>
+                    <DropShadowEffect ShadowDepth="1"/>
+                </StackPanel.Effect>
+                <StackPanel Height="241">
+                    <colorpicker:StandardColorPicker x:Name="ColorPicker" Height="224" Margin="0,0,-74,0" RenderTransformOrigin="0,0.5" PickerType="HSL" SelectedColor="White" UseHintColor="True" Foreground="#FFE6E6E6" Background="#FF1E1E1E">
+                        <colorpicker:StandardColorPicker.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform ScaleX="0.63" ScaleY="0.63"/>
+                                <SkewTransform/>
+                                <RotateTransform/>
+                                <TranslateTransform Y="-70"/>
+                            </TransformGroup>
+                        </colorpicker:StandardColorPicker.RenderTransform>
+                    </colorpicker:StandardColorPicker>
+                </StackPanel>
+                <StackPanel Height="50">
+                    <Grid Height="100">
+                        <Border BorderBrush="#FFACACAC" BorderThickness="0.5,0.5,0,0.5" Background="White" Margin="6,0" VerticalAlignment="Top" Height="46"/>
+                        <Label x:Name="BrushSizeLabel" Content="Brush Size" Margin="6,0" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="9" Height="19" Padding="5,3,5,5"/>
+                        <Slider x:Name="BrushSizeSlider" HorizontalAlignment="Center" VerticalAlignment="Top" Width="106" Margin="10,19,10,0" Maximum="4" Minimum="0.1" ValueChanged="slider_ValueChanged" LargeChange="0.1" Thumb.DragCompleted="BrushSizeSlider_MouseUp" Value="1"/>
+                    </Grid>
+                </StackPanel>
+                <StackPanel Height="61">
+                    <Grid Height="100">
+                        <Border BorderBrush="#FFACACAC" BorderThickness="0.5,0.5,0,0.5" Background="White" Margin="6,0" VerticalAlignment="Top" Height="22"/>
+                        <Label x:Name="label_Copy1" Content="Brush Type" Margin="6,0" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="9"/>
+                        <Button x:Name="SelectBrushButton" Content="Select" Margin="6,27,76,56" Click="SelectBrushButton_Click" Foreground="#FFE6E6E6" Background="#FFF2F2F2"/>
+                        <Image x:Name="BrushPreview" HorizontalAlignment="Left" Height="53" VerticalAlignment="Top" Width="52" Source="/Paint;component/Images/Brush1.png" Margin="64,5,0,0">
+                            <Image.Effect>
+                                <DropShadowEffect ShadowDepth="0"/>
+                            </Image.Effect>
+                        </Image>
+                    </Grid>
+                </StackPanel>
+                <StackPanel Height="50">
+                    <Grid HorizontalAlignment="Left" Height="50" VerticalAlignment="Top" Width="126">
+                        <Button x:Name="FillButton" Margin="7,0,6,33" Foreground="White" Content="Fill" Click="FillButton_Click" RenderTransformOrigin="0.5,0.5">
+                            <Button.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform/>
+                                    <SkewTransform AngleY="-0.296"/>
+                                    <RotateTransform/>
+                                    <TranslateTransform Y="-0.217"/>
+                                </TransformGroup>
+                            </Button.RenderTransform>
+                        </Button>
+                        <Image x:Name="FillIcon" Margin="103,0,7,34" Source="/Paint;component/Images/Fill.png" Visibility="Hidden"/>
+                        <Slider x:Name="FillDelta" HorizontalAlignment="Center" VerticalAlignment="Top" Width="87" Margin="7,23,32,0" Maximum="254" ValueChanged="FillDelta_ValueChanged" Thumb.DragCompleted="BrushSizeSlider_MouseUp" SmallChange="1" Value="1" Minimum="1"/>
+                        <Label x:Name="FillDeltaText" Content="1" HorizontalAlignment="Left" Margin="90,17,0,0" VerticalAlignment="Top" Foreground="White" Width="33" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    </Grid>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
 
     </Grid>
 </Window>

@@ -35,19 +35,19 @@ namespace Paint.Classes
 
         public void FindFiles(LocalFileSystem fileSystem)
         {
-            paths = Directory.GetFiles(fileSystem.Root + fileSystem.PluginsInstrumentsResources, "*.dll");
+            paths = Directory.GetFiles(fileSystem.Root + fileSystem.AddonsToolsPath, "*.dll");
         }
 
         public InstrumentsLoader(LocalFileSystem fileSystem, MainWindow mainWindow)
         {
-            Folder = fileSystem.Root + fileSystem.PluginsResources;
+            Folder = fileSystem.Root + fileSystem.AddonsPath;
             FindFiles(fileSystem);
             if (paths.Length == 0)
             {
-                var standardBrushes = System.AppDomain.CurrentDomain.BaseDirectory + "/StartBrushes.dll";
+                var standardBrushes = System.AppDomain.CurrentDomain.BaseDirectory + "/Bin/StartBrushes.dll";
                 if (File.Exists(standardBrushes))
                 {
-                    File.Copy(standardBrushes, fileSystem.Root + fileSystem.PluginsInstrumentsResources + "/StartBrushes.dll");
+                    File.Copy(standardBrushes, fileSystem.Root + fileSystem.AddonsToolsPath + "/StartBrushes.dll");
                     FindFiles(fileSystem);
                 }
                 else

@@ -12,25 +12,27 @@ namespace Paint.Classes
         public string FileSystemRoot { get; private set; }
         public string BrushesPath { get; private set; }
         private string LocalResources { get; set; }
-        public string PluginsResources { get; set; }
-        public string PluginsInstrumentsResources { get; set; }
+        public string AddonsPath { get; set; }
+        public string AddonsToolsPath { get; set; }
+        public string AddonsPluginsPath { get; set; }
 
         public Dictionary<string, string> Resources { get; private set; } = new Dictionary<string, string>();
 
         public LocalFileSystem()
         {
-            Root = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, @"..\");
+            Root = System.AppDomain.CurrentDomain.BaseDirectory;
             FileSystemRoot = "/Assets/";
             BrushesPath = FileSystemRoot + "/Brushes";
             LocalResources = FileSystemRoot + "/LocalResources";
-            PluginsResources = FileSystemRoot + "/Plugins";
-            PluginsInstrumentsResources = PluginsResources + "/Instruments";
+            AddonsPath = FileSystemRoot + "/Addons";
+            AddonsToolsPath = AddonsPath + "/Tools";
+            AddonsPluginsPath = AddonsPath + "/Plugins";
 
             Directory.CreateDirectory(Root + FileSystemRoot);
             Directory.CreateDirectory(Root + BrushesPath);
             Directory.CreateDirectory(Root + LocalResources);
-            Directory.CreateDirectory(Root + PluginsResources);
-            Directory.CreateDirectory(Root + PluginsInstrumentsResources);
+            Directory.CreateDirectory(Root + AddonsPath);
+            Directory.CreateDirectory(Root + AddonsToolsPath);
 
 
             LoadLocalResources();

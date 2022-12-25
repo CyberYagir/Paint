@@ -5,7 +5,7 @@ using System.Windows.Media.Imaging;
 
 namespace Paint.Classes
 {
-    class UndoRendo
+    public class UndoRendo
     {
         private int undoRendoLimit = 20;
         private List<WriteableBitmap> bitMaps = new List<WriteableBitmap>(10);

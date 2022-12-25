@@ -41,7 +41,7 @@ namespace Paint
         bool changed;
 
         private float scale = 1f;
-        private float fillPrecision = 0;
+        private float fillPrecision = 1;
         private MainWindow window;
 
         YVector lastLocalImageMousePos;
@@ -285,22 +285,28 @@ namespace Paint
                         {
                             if (pos.Y >= 0 && pos.Y < bitmapImage.PixelHeight)
                             {
-                                var posOnBrush = forPos + new YVector(bitmap.Width / 2, bitmap.Height / 2);
-
-                                var pixColorBrush = window.CurrentBrush.BrushBitmapImageScaled.GetPixel(posOnBrush.XInt, posOnBrush.YInt);
-                                //colorBrush
-                                var c0 = Color.FromArgb((byte)(pixColorBrush.A * (color.A / 255f)), color.R, color.G, color.B);
-
                                 try
                                 {
                                     // Reserve the back buffer for updates.
-
                                     unsafe
                                     {
 
 
                                         //ImageColor
                                         var imageColor = GetWritableBitmapColor(pos);
+
+                                        if (imageColor == color)
+                                        {
+                                            continue;
+                                        }
+
+
+                                        var posOnBrush = forPos + new YVector(bitmap.Width / 2, bitmap.Height / 2);
+
+                                        var pixColorBrush = window.CurrentBrush.BrushBitmapImageScaled.GetPixel(posOnBrush.XInt, posOnBrush.YInt);
+                                        //colorBrush
+                                        var c0 = Color.FromArgb((byte)(pixColorBrush.A * (color.A / 255f)), color.R, color.G, color.B);
+
 
                                         //ImageBrush
                                         var c1 = Color.FromArgb(imageColor.A, imageColor.R, imageColor.G, imageColor.B);
