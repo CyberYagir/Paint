@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 
 namespace Paint.Classes
 {
     class UndoRendo
     {
-        private int undoRendoLimit = 10;
+        private int undoRendoLimit = 20;
         private List<WriteableBitmap> bitMaps = new List<WriteableBitmap>(10);
         private PaintManager paintManager;
 
@@ -31,13 +28,13 @@ namespace Paint.Classes
                 bitMaps.RemoveAt(0);
             }
 
-            while (lastInList < bitMaps.Count-1)
+            while (lastInList < bitMaps.Count - 1)
             {
-                bitMaps.RemoveAt(bitMaps.Count-1);
+                bitMaps.RemoveAt(bitMaps.Count - 1);
             }
 
             bitMaps.Add(paintManager.GetBitMap());
-            lastInList = bitMaps.Count-1;
+            lastInList = bitMaps.Count - 1;
         }
 
         public void Undo()
@@ -57,7 +54,7 @@ namespace Paint.Classes
             }
         }
 
-        public void Rendo()
+        public void Redo()
         {
             lastInList++;
             if (lastInList > bitMaps.Count - 1)

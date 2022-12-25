@@ -1,9 +1,8 @@
 ﻿using Paint.Classes;
+using Paint.Classes.Instruments;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -17,12 +16,20 @@ namespace Paint
     {
         public enum State
         {
-            Paint, Moving, Fill
+            Paint, Moving
         }
 
+
+        List<Instrument> instrumentsList = new List<Instrument>();
+
+        string currentInstrument;
+
+
         private State state;
+
         YVector initSize;
 
+        Color currentColor;
 
         WriteableBitmap bitmapImage = null;
         private YVector startPos;
@@ -34,6 +41,7 @@ namespace Paint
         bool changed;
 
         private float scale = 1f;
+        private float fillPrecision = 0;
         private MainWindow window;
 
         YVector lastLocalImageMousePos;
@@ -43,12 +51,22 @@ namespace Paint
         public float Zoom => scale;
         public bool IsChanged => changed;
         public State CurrentState => state;
+        public Color CurrentColor => currentColor;
+
+        public string CurrentInstrument => currentInstrument;
+
         public PaintManager(Image mainImage, Grid frame, MainWindow window)
         {
             this.mainImage = mainImage;
             this.window = window;
             this.frame = frame;
             imagePos = mainImage.Margin;
+        }
+
+        public void SetInstrumentsList(List<Instrument> instruments)
+        {
+            instrumentsList = instruments;
+            SetInstrument("Brush");
         }
 
         public void SetState(State state)
@@ -65,23 +83,22 @@ namespace Paint
         }
         public void SetStartPos(YVector startFramePos) => this.startPos = startFramePos;
 
+        public void SetFillPrecision(float val)
+        {
+            fillPrecision = val;
+        }
 
         public void Update(YVector imageMousePos, YVector frameMousePos, Color color, MouseEventArgs e)
         {
             lastLocalImageMousePos = imageMousePos;
             lastLocalRectMousePos = frameMousePos;
+            currentColor = color;
             switch (state)
             {
                 case State.Paint:
                     if (e.LeftButton == MouseButtonState.Pressed)
                     {
-                        Draw(lastLocalImageMousePos, color);
-                    }
-                    break;
-                case State.Fill:
-                    if (e.LeftButton == MouseButtonState.Pressed)
-                    {
-                        Fill(lastLocalImageMousePos, color);
+                        CallInstrument(lastLocalImageMousePos);
                     }
                     break;
                 case State.Moving:
@@ -93,13 +110,24 @@ namespace Paint
         }
 
 
+        public void CallInstrument(YVector pos)
+        {
+            var instrument = instrumentsList.Find(x => x.InstrumentName == currentInstrument);
+
+            if (instrument != null)
+            {
+                instrument.Call(pos);
+            }
+        }
+
+
 
         // A cache of all opacity values (0-255) scaled down to 0-1 for performance
         private readonly float[] _opacities = Enumerable.Range(0, 256)
                                               .Select(o => o / 255f)
                                               .ToArray();
 
-        private Color AlphaComposite(Color c1, Color c2)
+        public Color AlphaComposite(Color c1, Color c2)
         {
             var opa1 = _opacities[c1.A];
             var opa2 = _opacities[c2.A];
@@ -114,25 +142,33 @@ namespace Paint
             return Color.FromArgb((byte)(ar * 255), r, g, b);
         }
 
-        private void Fill(YVector imagePixel, Color color)
+        public void Fill(YVector imagePixel, Color color)
         {
             if (bitmapImage != null)
-            { 
+            {
 
                 changed = true;
                 imagePixel /= scale;
-                
+
                 YVector pos = new YVector(imagePixel.X, imagePixel.Y);
 
 
                 bitmapImage.Lock();
 
-                FillWhile(pos, color);
+                if (CanDrawRect(pos))
+                {
+                    if (IsCanDraw(pos, color))
+                    {
+                        var startDelta = GetDeltaColors(GetWritableBitmapColor(pos), color);
+
+                        FloodFill(pos, color, startDelta);
+                    }
+                }
 
                 bitmapImage.Unlock();
             }
         }
-        bool IsCanDraw(YVector currentPos, Color fillColor)
+        public bool IsCanDraw(YVector currentPos, Color fillColor)
         {
             var currentPixelColor = GetWritableBitmapColor(currentPos);
             if (currentPixelColor == fillColor)
@@ -153,48 +189,41 @@ namespace Paint
             return false;
         }
 
-        private void FloodFill(YVector pt, Color replacementColor)
+        private void FloodFill(YVector pt, Color replacementColor, float startDelta)
         {
             Stack<YVector> pixels = new Stack<YVector>();
-            var targetColor = GetWritableBitmapColor(pt);
             pixels.Push(pt);
 
-            while (pixels.Count > 0)
+            while (pixels.Count > 0 && pixels.Count < (bitmapImage.PixelWidth * bitmapImage.PixelHeight) * 2)
             {
                 YVector a = pixels.Pop();
                 if (CanDrawRect(a))//make sure we stay within bounds
                 {
+                    var pixelColor = GetWritableBitmapColor(a);
+                    var currentDelta = GetDeltaColors(pixelColor, replacementColor);
 
-                    if (GetWritableBitmapColor(a) == targetColor)
+                    if (pixelColor != replacementColor)
                     {
-                        DrawPixel(a, replacementColor);
-                        pixels.Push(new YVector(a.X - 1, a.Y));
-                        pixels.Push(new YVector(a.X + 1, a.Y));
-                        pixels.Push(new YVector(a.X, a.Y - 1));
-                        pixels.Push(new YVector(a.X, a.Y + 1));
+                        if (startDelta - currentDelta < fillPrecision)
+                        {
+                            DrawPixel(a, replacementColor);
+                            pixels.Push(new YVector(a.X - 1, a.Y));
+                            pixels.Push(new YVector(a.X + 1, a.Y));
+                            pixels.Push(new YVector(a.X, a.Y - 1));
+                            pixels.Push(new YVector(a.X, a.Y + 1));
+                        }
                     }
                 }
             }
             return;
         }
 
-        private void FillWhile(YVector pos, Color fillColor)
+
+
+        public float GetDeltaColors(Color c1, Color c2)
         {
-            if (CanDrawRect(pos))
-            {
-                if (IsCanDraw(pos, fillColor))
-                {
-                    FloodFill(pos, fillColor);
-                }
-            }
-        }
-
-
-
-        private float GetDeltaColors(Color c1, Color c2)
-        {
-            var first = ((c1.R + c1.G + c1.B) / 3f)/255;
-            var second = ((c2.R + c2.G + c2.B) / 3f)/255;
+            var first = ((c1.R + c1.G + c1.B) / 3f) / 255;
+            var second = ((c2.R + c2.G + c2.B) / 3f) / 255;
 
             if (c1.A != c2.A)
             {
@@ -230,6 +259,12 @@ namespace Paint
             return Color.FromArgb(255, 255, 255, 255);
         }
 
+
+        public void SetInstrument(string name)
+        {
+            currentInstrument = name;
+        }
+
         public void Draw(YVector imagePixel, Color color)
         {
             if (bitmapImage != null)
@@ -240,9 +275,9 @@ namespace Paint
 
                 bitmapImage.Lock();
                 var bitmap = window.CurrentBrush.BrushBitmapImageScaled;
-                for (int x = -(int)bitmap.Width / 2; x < (bitmap.Width / 2) -1; x++)
+                for (int x = -(int)bitmap.Width / 2; x < (bitmap.Width / 2) - 1; x++)
                 {
-                    for (int y = -(int)bitmap.Height / 2; y < (bitmap.Height / 2) -1; y++)
+                    for (int y = -(int)bitmap.Height / 2; y < (bitmap.Height / 2) - 1; y++)
                     {
                         var forPos = new YVector(x, y);
                         pos = imagePixel + forPos;
@@ -250,11 +285,11 @@ namespace Paint
                         {
                             if (pos.Y >= 0 && pos.Y < bitmapImage.PixelHeight)
                             {
-                                var posOnBrush = forPos + new YVector(bitmap.Width / 2, bitmap.Height/2);
+                                var posOnBrush = forPos + new YVector(bitmap.Width / 2, bitmap.Height / 2);
 
                                 var pixColorBrush = window.CurrentBrush.BrushBitmapImageScaled.GetPixel(posOnBrush.XInt, posOnBrush.YInt);
                                 //colorBrush
-                                var c0 = Color.FromArgb((byte)(pixColorBrush.A * (color.A/255f)), color.R, color.G, color.B);
+                                var c0 = Color.FromArgb((byte)(pixColorBrush.A * (color.A / 255f)), color.R, color.G, color.B);
 
                                 try
                                 {
@@ -320,7 +355,7 @@ namespace Paint
             }
         }
 
-        internal void ReducePos(YVector pixels)
+        public void ReducePos(YVector pixels)
         {
             mainImage.BeginAnimation(FrameworkElement.MarginProperty, null);
             imagePos.Left -= pixels.X;
@@ -464,7 +499,7 @@ namespace Paint
             anim.From = from;
             anim.To = to;
             anim.Duration = new Duration(TimeSpan.FromMilliseconds(animationTime));
-            anim.Completed += (a,g) => { notAnimated = true; };
+            anim.Completed += (a, g) => { notAnimated = true; };
             mainImage.BeginAnimation(property, anim);
 
         }

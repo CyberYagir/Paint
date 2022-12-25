@@ -8,7 +8,7 @@
         xmlns:Properties="clr-namespace:Paint.Properties"
         x:Class="Paint.MainWindow"
         mc:Ignorable="d"
-        Title="Paint" Height="450" Width="800" MouseMove="Window_MouseMove" WindowStartupLocation="CenterScreen" SizeChanged="Window_SizeChanged" Icon="/Paint;component/Images/icon.ico">
+        Title="Paint" Height="450" Width="800" MouseMove="Window_MouseMove" WindowStartupLocation="CenterScreen" SizeChanged="Window_SizeChanged" Icon="/Paint;component/Images/icon.ico" KeyDown="HotKeys">
     <Window.Background>
         <ImageBrush ImageSource="../Images/Cheker.jpg" TileMode="Tile" ViewportUnits="Absolute" Viewport="0,0,32,32"/>
     </Window.Background>
@@ -19,7 +19,7 @@
                 <DropShadowEffect ShadowDepth="1"/>
             </StackPanel.Effect>
             <StackPanel Height="241">
-                <colorpicker:StandardColorPicker x:Name="ColorPicker" Height="224" Margin="0,0,-74,0" RenderTransformOrigin="0,0.5" PickerType="HSL" SelectedColor="White" UseHintColor="True" Foreground="#FFE6E6E6" Background="#FF1E1E1E" ColorChanged="ColorPicker_ColorChanged">
+                <colorpicker:StandardColorPicker x:Name="ColorPicker" Height="224" Margin="0,0,-74,0" RenderTransformOrigin="0,0.5" PickerType="HSL" SelectedColor="White" UseHintColor="True" Foreground="#FFE6E6E6" Background="#FF1E1E1E">
                     <colorpicker:StandardColorPicker.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform ScaleX="0.63" ScaleY="0.63"/>
@@ -37,7 +37,7 @@
                     <Slider x:Name="BrushSizeSlider" HorizontalAlignment="Center" VerticalAlignment="Top" Width="106" Margin="10,19,10,0" Maximum="4" Minimum="0.1" ValueChanged="slider_ValueChanged" LargeChange="0.1" Thumb.DragCompleted="BrushSizeSlider_MouseUp" Value="1"/>
                 </Grid>
             </StackPanel>
-            <StackPanel Height="100">
+            <StackPanel Height="61">
                 <Grid Height="100">
                     <Border BorderBrush="#FFACACAC" BorderThickness="0.5,0.5,0,0.5" Background="White" Margin="6,0" VerticalAlignment="Top" Height="22"/>
                     <Label x:Name="label_Copy1" Content="Brush Type" Margin="6,0" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="9"/>
@@ -47,24 +47,48 @@
                             <DropShadowEffect ShadowDepth="0"/>
                         </Image.Effect>
                     </Image>
-                    <Button x:Name="FillButton" Margin="6,63,6,16" Foreground="White" Content="Fill" Click="FillButton_Click"/>
-                    <Image x:Name="FillIcon" Margin="92,64,13,16" Source="1024px-Toicon-icon-stone-fill.svg.png" Visibility="Hidden"/>
+                </Grid>
+            </StackPanel>
+            <StackPanel Height="50">
+                <Grid HorizontalAlignment="Left" Height="50" VerticalAlignment="Top" Width="126">
+                    <Button x:Name="FillButton" Margin="7,0,6,33" Foreground="White" Content="Fill" Click="FillButton_Click" RenderTransformOrigin="0.5,0.5">
+                        <Button.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform AngleY="-0.296"/>
+                                <RotateTransform/>
+                                <TranslateTransform Y="-0.217"/>
+                            </TransformGroup>
+                        </Button.RenderTransform>
+                    </Button>
+                    <Image x:Name="FillIcon" Margin="103,0,7,34" Source="/Paint;component/Images/Fill.png" Visibility="Hidden"/>
+                    <Slider x:Name="FillDelta" HorizontalAlignment="Center" VerticalAlignment="Top" Width="87" Margin="7,23,32,0" Maximum="254" ValueChanged="FillDelta_ValueChanged" Thumb.DragCompleted="BrushSizeSlider_MouseUp" SmallChange="1" Value="1"/>
+                    <Label x:Name="FillDeltaText" Content="0" HorizontalAlignment="Left" Margin="90,17,0,0" VerticalAlignment="Top" Foreground="White" Width="33" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                 </Grid>
             </StackPanel>
         </StackPanel>
-        <Grid x:Name="menu" Height="18" VerticalAlignment="Top" Margin="0" Panel.ZIndex="2" Background="#FF333333">
-            <Button x:Name="Openbtn_Copy" Content="File" Background="{x:Null}" Foreground="#FFE6E6E6" Click="FileContext" SnapsToDevicePixels="True" ScrollViewer.VerticalScrollBarVisibility="Disabled" UseLayoutRounding="False" Width="40.667" Height="18" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="0"/>
-            <Button x:Name="Edit_btn" Content="Edit" Background="{x:Null}" Foreground="#FFE6E6E6" Click="EditContext" SnapsToDevicePixels="True" ScrollViewer.VerticalScrollBarVisibility="Disabled" UseLayoutRounding="False" Width="40.667" Height="18" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="0" Margin="40.667,0,0,0"/>
-        </Grid>
-        <StackPanel x:Name="FileMenu" HorizontalAlignment="Left" VerticalAlignment="Top" Panel.ZIndex="99" Margin="-123,-30,0,0" Background="#FF333333" MouseLeave="FileMenu_MouseLeave" Height="56" Width="55">
-            <Button x:Name="Openbtn" Content="Open" Background="{x:Null}" Foreground="#FFE6E6E6" Click="OpenFile" SnapsToDevicePixels="True" VerticalContentAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Disabled" UseLayoutRounding="False"/>
-            <Button x:Name="Createbtn" Content="Create" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FFE6E6E6" Click="Createbtn_Click" SnapsToDevicePixels="True" VerticalContentAlignment="Stretch"/>
-            <Button x:Name="Savebtn" Content="Save as" Foreground="#FFE6E6E6" Click="Savebtn_Click" SnapsToDevicePixels="True" VerticalContentAlignment="Stretch"/>
-        </StackPanel>
-        <StackPanel x:Name="EditMenu" HorizontalAlignment="Left" VerticalAlignment="Top" Panel.ZIndex="99" Margin="-190,-30,0,0" Background="#FF333333" MouseLeave="FileMenu_MouseLeave" Height="37" Width="55">
-            <Button x:Name="Undo" Content="Undo" Background="{x:Null}" Foreground="#FFE6E6E6" Click="Undo_Click" SnapsToDevicePixels="True" VerticalContentAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Disabled" UseLayoutRounding="False"/>
-            <Button x:Name="Rendo" Content="Rendo" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FFE6E6E6" Click="Rendo_Click" SnapsToDevicePixels="True" VerticalContentAlignment="Stretch"/>
-        </StackPanel>
+        <Menu x:Name="menu" Height="18" VerticalAlignment="Top" Background="#FF333333" Panel.ZIndex="4" Margin="0,0,0.333,0">
+            <MenuItem Header="File" Height="18" Width="37" Foreground="White">
+                <MenuItem InputGestureText="Ctrl+O"  Header="Open.." Foreground="#FF0A0A0A" Click="OpenFile"/>
+                <MenuItem InputGestureText="Ctrl+N" Header="Create new.." Foreground="#FF0A0A0A" Click="Createbtn_Click"/>
+                <MenuItem InputGestureText="Ctrl+S" Header="Save as.." Foreground="#FF0A0A0A" Click="Savebtn_Click"/>
+                <Separator Margin="0"/>
+                <MenuItem InputGestureText="Alt+F4" Header="Close" Foreground="#FF0A0A0A" Click="CloseBtn"/>
+            </MenuItem>
+            <MenuItem Header="Edit" Foreground="White">
+                <MenuItem InputGestureText="Ctrl+Z" Header="Undo" Foreground="#FF0A0A0A" Click="Undo_Click"/>
+                <MenuItem InputGestureText="Ctrl+Shift+Z" Header="Redo" Foreground="#FF0A0A0A" Click="Redo_Click"/>
+            </MenuItem>
+            <MenuItem Header="Addons" Foreground="White">
+                <MenuItem Header="Tools" Foreground="#FF0A0A0A" Click="OpenToolsBtn"/>
+                <MenuItem Header="Plugins" Foreground="#FF0A0A0A" Click="OpenPlugins"/>
+                <MenuItem InputGestureText="Ctrl+P"  Header="All Addons" Foreground="#FF0A0A0A" Click="OpenAddons"/>
+            </MenuItem>
+            <MenuItem Foreground="White" Header="Help">
+                <MenuItem Foreground="#FF0A0A0A" Header="Creator" Click="CreatorButton"/>
+                <MenuItem Foreground="#FF0A0A0A" Header="Sources" Click="GitHub"/>
+            </MenuItem>
+        </Menu>
         <Border BorderBrush="Black" BorderThickness="1" Margin="126,0,0.333,0" VerticalAlignment="Top" Panel.ZIndex="1" Height="18">
             <Border.Effect>
                 <DropShadowEffect ShadowDepth="2"/>
@@ -79,7 +103,7 @@
                 </Image.Effect>
             </Image>
             <Image x:Name="BrushImage" RenderOptions.BitmapScalingMode="NearestNeighbor" HorizontalAlignment="Left" Height="128" Margin="0" VerticalAlignment="Top" Width="128" Source="/Paint;component/Images/Brush1.png"/>
-            <Image x:Name="FillImage" RenderOptions.BitmapScalingMode="NearestNeighbor" HorizontalAlignment="Left" Height="49" Margin="201,49,0,0" VerticalAlignment="Top" Width="49" Source="FillCursor.png"/>
+            <Image x:Name="FillImage" RenderOptions.BitmapScalingMode="NearestNeighbor" HorizontalAlignment="Left" Height="49" Margin="201,49,0,0" VerticalAlignment="Top" Width="49" Source="/Paint;component/Images/FillCursor.png"/>
         </Grid>
         <StackPanel x:Name="UndoRendoDebug" Height="956" Margin="671,23,0,-558.333" VerticalAlignment="Top" Width="100" HorizontalAlignment="Right" Visibility="Hidden">
             <Image x:Name="image" Height="100" Stretch="UniformToFill" Source="/Paint;component/Images/Brush1.png"/>

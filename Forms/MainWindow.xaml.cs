@@ -18,11 +18,17 @@ namespace Paint
         private LocalFileSystem localSystem;
         private BrushesManager brushesManager;
         private UndoRendo undoRendo;
-        private bool isFillOn;
+        private InstrumentsLoader instrumentsLoader;
+        private HotKeysManager keysManager;
+
 
         BrushesManager.Brush brush;
-
         DispatcherTimer timer;
+
+
+        public PaintManager PaintManager => paintManager;
+        public InstrumentsLoader InstrumentsLoader => instrumentsLoader;
+
 
         public BrushesManager.Brush CurrentBrush
         {
@@ -45,19 +51,69 @@ namespace Paint
             InitializeComponent();
             localSystem = new LocalFileSystem();
 
-            menuManager = new MenuManager(menu, this);
+            menuManager = new MenuManager(this);
             paintManager = new PaintManager(MainImage, frame, this);
+
+            instrumentsLoader = new InstrumentsLoader(localSystem, this);
+            
             brushesManager = new BrushesManager(localSystem);
             undoRendo = new UndoRendo(paintManager);
+
+            keysManager = new HotKeysManager();
+            AddAllHotKeys();
+
+            paintManager.SetInstrumentsList(instrumentsLoader.GetInstruments());
             CurrentBrush = brushesManager.GetBrushes()[0];
+
 
             StartWindowConfiguration();
         }
 
+        public void AddAllHotKeys()
+        {
+            keysManager.AddHotKey(new HotKey(ModifierKeys.Control, Key.Z, delegate
+            {
+                undoRendo.Undo();
+            }));
+            keysManager.AddHotKey(new HotKey(ModifierKeys.Control | ModifierKeys.Shift, Key.Z, delegate
+            {
+                undoRendo.Redo();
+            }));
+            keysManager.AddHotKey(new HotKey(ModifierKeys.Control, Key.Y, delegate
+            {
+                undoRendo.Redo();
+            }));
 
+            keysManager.AddHotKey(new HotKey(ModifierKeys.Control, Key.Y, delegate
+            {
+                undoRendo.Redo();
+            }));
 
+            keysManager.AddHotKey(new HotKey(ModifierKeys.Control, Key.P, delegate
+            {
+                OpenPlugins(PluginsWindow.DisplayState.All);
+            }));
 
+            keysManager.AddHotKey(new HotKey(ModifierKeys.Control, Key.B, delegate
+            {
+                SelectBrushButton_Click(null, new RoutedEventArgs());
+            }));
 
+            keysManager.AddHotKey(new HotKey(ModifierKeys.Control, Key.O, delegate
+            {
+                Createbtn_Click(null, new RoutedEventArgs());
+            }));
+
+            keysManager.AddHotKey(new HotKey(ModifierKeys.Control, Key.N, delegate
+            {
+                OpenFile(null, new RoutedEventArgs());
+            }));
+
+            keysManager.AddHotKey(new HotKey(ModifierKeys.Control, Key.S, delegate
+            {
+                Savebtn_Click(null, new RoutedEventArgs());
+            }));
+        }
 
 
         #region Main
@@ -105,32 +161,15 @@ namespace Paint
 
         #region Menu
         public void OpenFile(object sender, RoutedEventArgs e) => menuManager.OpenFile();
-
-        private void FileContext(object sender, RoutedEventArgs e)
+        private void OpenPlugins(PluginsWindow.DisplayState state)
         {
-            ShowContex(FileMenu);
-        }
-        private void EditContext(object sender, RoutedEventArgs e)
-        {
-            ShowContex(EditMenu);
+            PluginsWindow window = new PluginsWindow(this, state);
+            window.ShowDialog();
         }
 
-
-        public void ShowContex(StackPanel panel)
+        private void CloseBtn(object sender, RoutedEventArgs e)
         {
-            var stack = panel;
-            stack.Visibility = Visibility.Visible;
-            stack.Margin = new Thickness(Mouse.GetPosition(this).X, GetMenuHeight(), 0, 0);
-        }
-
-        public double GetMenuHeight()
-        {
-            double y = Mouse.GetPosition(this).Y;
-            if (y < menu.Height)
-            {
-                y = menu.Height;
-            }
-            return y;
+            Close();
         }
 
         private void FileMenu_MouseLeave(object sender, MouseEventArgs e)
@@ -147,10 +186,48 @@ namespace Paint
             menuManager.SaveFile(MainImage.Source);
         }
 
+        private void OpenToolsBtn(object sender, RoutedEventArgs e)
+        {
+            OpenPlugins(PluginsWindow.DisplayState.Instruments);
+        }
 
+        private void OpenPlugins(object sender, RoutedEventArgs e)
+        {
+            OpenPlugins(PluginsWindow.DisplayState.Plugins);
+        }
+
+        private void OpenAddons(object sender, RoutedEventArgs e)
+        {
+            OpenPlugins(PluginsWindow.DisplayState.All);
+        }
+        private void CreatorButton(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Creator: Yaroslav Khromov", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        private void GitHub(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/CyberYagir");
+        }
         #endregion
 
         #region Window
+
+
+        private void frame_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (paintManager.IsChanged)
+            {
+                timer = new DispatcherTimer();
+                timer.Interval = new TimeSpan(0, 0, 0, 0, 100);
+                timer.Tick += (a, g) =>
+                {
+                    AddAction();
+                    timer.Stop();
+                };
+
+                timer.Start();
+            }
+        }
         private void frame_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             var framePos = new YVector(e.GetPosition(frame));
@@ -160,7 +237,7 @@ namespace Paint
         }
         private void frame_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
-            paintManager.SetState(isFillOn ? PaintManager.State.Fill : PaintManager.State.Paint);
+            paintManager.SetState(PaintManager.State.Paint);
         }
         public void AddAction()
         {
@@ -190,14 +267,14 @@ namespace Paint
             var imagePos = new YVector(e.GetPosition(MainImage));
             paintManager.Update(imagePos, framePos, ColorPicker.SelectedColor, e);
             SetBrushImage(new YVector(e.GetPosition(frame)));
-            if (isFillOn)
+            if (paintManager.CurrentInstrument == "Fill")
             {
                 FillImage.Margin = BrushImage.Margin;
             }
         }
         private void frame_MouseLeave(object sender, MouseEventArgs e)
         {
-            paintManager.SetState(isFillOn ? PaintManager.State.Fill : PaintManager.State.Paint);
+            paintManager.SetState(PaintManager.State.Paint);
         }
         private void frame_MouseWheel(object sender, MouseWheelEventArgs e)
         {
@@ -224,9 +301,9 @@ namespace Paint
             undoRendo.Undo();
             UpdateUndoRendoDebug();
         }
-        private void Rendo_Click(object sender, RoutedEventArgs e)
+        private void Redo_Click(object sender, RoutedEventArgs e)
         {
-            undoRendo.Rendo();
+            undoRendo.Redo();
             UpdateUndoRendoDebug();
         }
 
@@ -238,20 +315,22 @@ namespace Paint
 
         private void FillButton_Click(object sender, RoutedEventArgs e)
         {
-            isFillOn = !isFillOn;
+            if (paintManager.CurrentInstrument != "Fill")
+            {
+                paintManager.SetInstrument("Fill");
+            }
+            else
+            {
+                paintManager.SetInstrument("Brush");
+            }
+
+            var isFillOn = paintManager.CurrentInstrument == "Fill";
+
             FillIcon.Visibility = isFillOn ? Visibility.Visible : Visibility.Hidden;
             BrushImage.Visibility = isFillOn ? Visibility.Hidden : Visibility.Visible;
 
             FillImage.Visibility = !isFillOn ? Visibility.Hidden : Visibility.Visible;
 
-            if (paintManager.CurrentState == PaintManager.State.Fill && !isFillOn)
-            {
-                paintManager.SetState(PaintManager.State.Paint);
-            }
-            else if (paintManager.CurrentState == PaintManager.State.Paint && isFillOn)
-            {
-                paintManager.SetState(PaintManager.State.Fill);
-            }
         }
 
         private void slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -269,11 +348,6 @@ namespace Paint
             }
         }
 
-        private void ColorPicker_ColorChanged(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         #endregion
 
         #region BrushSelection
@@ -289,22 +363,24 @@ namespace Paint
 
         #endregion
 
+        private void FillDelta_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (paintManager != null)
+            {
+                paintManager.SetFillPrecision((int)FillDelta.Value / 254f);
+                FillDeltaText.Content = (int)FillDelta.Value;
+            }
+        }
+
+
+
+
+
         #endregion
 
-        private void frame_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void HotKeys(object sender, KeyEventArgs e)
         {
-            if (paintManager.IsChanged)
-            {
-                timer = new DispatcherTimer();
-                timer.Interval = new TimeSpan(0, 0, 0, 0, 100);
-                timer.Tick += (a, g) =>
-                {
-                    AddAction();
-                    timer.Stop();
-                };
-
-                timer.Start();
-            }
+            keysManager.CheckHotKeys(e);
         }
 
 

@@ -10,11 +10,9 @@ namespace Paint
 {
     public class MenuManager
     {
-        private Grid menu;
         private MainWindow mainWindow;
-        public MenuManager(Grid menu, MainWindow main)
+        public MenuManager(MainWindow main)
         {
-            this.menu = menu;
             this.mainWindow = main;
         }
 

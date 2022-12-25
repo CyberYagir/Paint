@@ -50,3 +50,7 @@ C:\Users\Yaroslav\source\repos\Paint\obj\Debug\Forms\BrushesWindow.g.cs
 C:\Users\Yaroslav\source\repos\Paint\obj\Debug\Forms\BrushesWindow.baml
 C:\Users\Yaroslav\source\repos\Paint\obj\Debug\Styles\Button.baml
 C:\Users\Yaroslav\source\repos\Paint\obj\Debug\App.baml
+C:\Users\Yaroslav\source\repos\Paint\obj\Debug\Paint_Content.g.cs
+C:\Users\Yaroslav\source\repos\Paint\bin\Debug\Data\StartBrushes.dll
+C:\Users\Yaroslav\source\repos\Paint\obj\Debug\Forms\PluginsWindow.g.cs
+C:\Users\Yaroslav\source\repos\Paint\obj\Debug\Forms\PluginsWindow.baml
