@@ -8,6 +8,7 @@ namespace Paint
 {
     public partial class MainWindow
     {
+
         private void frame_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             if (PaintManager.IsChanged)
@@ -65,8 +66,8 @@ namespace Paint
             SetBrushImage(pos);
             if (PaintManager.CurrentInstrument == "Fill")
             {
-                FillImage.Width = 20;
-                FillImage.Height = 20;
+                FillImage.Width = 30;
+                FillImage.Height = 30;
                 FillImage.Margin = new Thickness((pos.X - FillImage.Width / 2f) + FillImage.Width, (pos.Y - FillImage.Height / 2f) + FillImage.Height, 0, 0);
             }
         }
@@ -89,9 +90,11 @@ namespace Paint
 
         private void frame_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+
             var framePos = new YVector(e.GetPosition(frame));
             var imagePos = new YVector(e.GetPosition(MainImage));
             PaintManager.Update(imagePos, framePos, ColorPicker.SelectedColor, e);
+
         }
 
         private void Undo_Click(object sender, RoutedEventArgs e)

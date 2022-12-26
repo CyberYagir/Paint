@@ -3,6 +3,7 @@ using Paint.Forms;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
@@ -55,7 +56,7 @@ namespace Paint
             AddAllHotKeys();
 
             PaintManager.SetInstrumentsList(InstrumentsLoader.GetInstruments());
-            CurrentBrush = BrushesManager.GetBrushes()[0];
+            CurrentBrush = BrushesManager.GetBrushes().Find(x=>x.Name == "Standard");
 
 
             StartWindowConfiguration();
@@ -78,6 +79,16 @@ namespace Paint
 
             ColorPicker.SelectedColor = System.Windows.Media.Color.FromArgb(255, 0, 0, 0);
 
+
+            BrushImage.Effect = new DropShadowEffect()
+            {
+                Opacity = 0.2f
+            };
+
+            FillImage.Effect = new DropShadowEffect()
+            {
+                Opacity = 0.2f
+            };
         }
 
         public void SetMainImage(WriteableBitmap bitmapImage)
@@ -95,6 +106,10 @@ namespace Paint
             BrushImage.Width = brush.BrushBitmapImageScaled.Width * PaintManager.Zoom;
             BrushImage.Height = brush.BrushBitmapImageScaled.Height * PaintManager.Zoom;
             BrushImage.Opacity = ColorPicker.Color.A / 255;
+            BrushImage.Effect = new DropShadowEffect()
+            {
+                Opacity = (0.2f/ BrushImage.Opacity)
+            };
 
             if (pos != null)
             {

@@ -279,7 +279,13 @@ namespace Paint
                 {
                     for (int y = -(int)bitmap.Height / 2; y < (bitmap.Height / 2) - 1; y++)
                     {
+
                         var forPos = new YVector(x, y);
+
+                        var posOnBrush = forPos + new YVector(bitmap.Width / 2, bitmap.Height / 2);
+                        var pixColorBrush = window.CurrentBrush.BrushBitmapImageScaled.GetPixel(posOnBrush.XInt, posOnBrush.YInt);
+                        if (pixColorBrush.A == 0) continue;
+
                         pos = imagePixel + forPos;
                         if (pos.X >= 0 && pos.X < bitmapImage.PixelWidth)
                         {
@@ -300,10 +306,6 @@ namespace Paint
                                             continue;
                                         }
 
-
-                                        var posOnBrush = forPos + new YVector(bitmap.Width / 2, bitmap.Height / 2);
-
-                                        var pixColorBrush = window.CurrentBrush.BrushBitmapImageScaled.GetPixel(posOnBrush.XInt, posOnBrush.YInt);
                                         //colorBrush
                                         var c0 = Color.FromArgb((byte)(pixColorBrush.A * (color.A / 255f)), color.R, color.G, color.B);
 

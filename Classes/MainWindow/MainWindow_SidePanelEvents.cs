@@ -25,7 +25,8 @@ namespace Paint
 
             var isFillOn = PaintManager.CurrentInstrument == "Fill";
 
-            FillIcon.Visibility = isFillOn ? Visibility.Visible : Visibility.Hidden;
+            FillIcon.Opacity = !isFillOn ? 0.2f : 1f;
+
             BrushImage.Visibility = isFillOn ? Visibility.Hidden : Visibility.Visible;
 
             FillImage.Visibility = !isFillOn ? Visibility.Hidden : Visibility.Visible;

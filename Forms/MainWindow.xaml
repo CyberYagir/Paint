@@ -103,7 +103,7 @@
                 </StackPanel>
                 <StackPanel Height="50">
                     <Grid HorizontalAlignment="Left" Height="50" VerticalAlignment="Top" Width="126">
-                        <Button x:Name="FillButton" Margin="7,0,6,33" Foreground="White" Content="Fill" Click="FillButton_Click" RenderTransformOrigin="0.5,0.5">
+                        <Button x:Name="FillButton" Margin="7,5,46,28" Foreground="White" Content="Fill" Click="FillButton_Click" RenderTransformOrigin="0.5,0.5">
                             <Button.RenderTransform>
                                 <TransformGroup>
                                     <ScaleTransform/>
@@ -113,9 +113,9 @@
                                 </TransformGroup>
                             </Button.RenderTransform>
                         </Button>
-                        <Image x:Name="FillIcon" Margin="103,0,7,34" Source="/Paint;component/Images/Fill.png" Visibility="Hidden"/>
-                        <Slider x:Name="FillDelta" HorizontalAlignment="Center" VerticalAlignment="Top" Width="87" Margin="7,23,32,0" Maximum="254" ValueChanged="FillDelta_ValueChanged" Thumb.DragCompleted="BrushSizeSlider_MouseUp" SmallChange="1" Value="1" Minimum="1"/>
-                        <Label x:Name="FillDeltaText" Content="1" HorizontalAlignment="Left" Margin="90,17,0,0" VerticalAlignment="Top" Foreground="White" Width="33" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                        <Image x:Name="FillIcon" Margin="90,0,8,22" Source="/Paint;component/Images/Fill.png" Opacity="0.2"/>
+                        <Slider x:Name="FillDelta" HorizontalAlignment="Center" VerticalAlignment="Top" Width="76" Margin="7,28,43,0" Maximum="254" ValueChanged="FillDelta_ValueChanged" Thumb.DragCompleted="BrushSizeSlider_MouseUp" SmallChange="1" Value="1" Minimum="1"/>
+                        <Label x:Name="FillDeltaText" Content="1" HorizontalAlignment="Left" Margin="87,23,0,0" VerticalAlignment="Top" Foreground="White" Width="33" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="23" IsEnabled="False"/>
                     </Grid>
                 </StackPanel>
             </StackPanel>

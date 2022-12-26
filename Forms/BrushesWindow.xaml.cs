@@ -59,7 +59,7 @@ namespace Paint.Forms
 
                 clone.MouseEnter += Item_MouseEnter;
                 clone.MouseLeave += Item_MouseLeave;
-                clone.MouseDown += Item_MouseDown;
+                clone.MouseUp += Item_MouseUp;
                 clone.DataContext = item;
                 List.Children.Add(clone);
             }
@@ -141,7 +141,7 @@ namespace Paint.Forms
             }
         }
 
-        private void Item_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void Item_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             mainWindow.CurrentBrush = ((sender as Grid).DataContext as BrushesManager.Brush);
             Close();
