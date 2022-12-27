@@ -79,7 +79,7 @@ namespace Paint.Forms
         public ListBoxItem CreateListItem(string text, string path)
         {
             var listItem = new ListBoxItem();
-            listItem.Content = text;;
+            listItem.Content = text; ;
             listItem.Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255));
             listItem.FontSize = 16;
             listItem.MouseUp += (a, e) =>

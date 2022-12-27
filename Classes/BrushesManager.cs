@@ -9,9 +9,6 @@ namespace Paint.Classes
 {
     public sealed class BrushesManager
     {
-
-      
-
         [System.Serializable]
         public class Brush
         {
@@ -28,7 +25,7 @@ namespace Paint.Classes
 
             [JsonIgnore]
             public BitmapImage BrushBitmapImage { get; set; }
-            
+
             [JsonIgnore]
             public Bitmap BrushBitmapImageScaled { get; set; }
 
@@ -96,7 +93,7 @@ namespace Paint.Classes
         public Bitmap ResizeBrush(Brush brush, float scale)
         {
             var cloneImage = brush.BrushImage;
-            var scaled = new Bitmap(cloneImage, new Size((int)(cloneImage.Width * scale), (int)(cloneImage.Height*scale)));
+            var scaled = new Bitmap(cloneImage, new Size((int)(cloneImage.Width * scale), (int)(cloneImage.Height * scale)));
             brush.BrushBitmapImageScaled = scaled;
             return scaled;
         }

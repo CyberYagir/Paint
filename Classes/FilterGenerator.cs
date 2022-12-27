@@ -1,10 +1,5 @@
 ﻿namespace Paint
 {
-    /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
-    /// </summary>
-    /// 
-
     public static class FilterGenerator
     {
         public static string GenerateFilter(string name, params string[] formats)

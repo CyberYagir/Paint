@@ -1,11 +1,9 @@
 ﻿using Microsoft.Win32;
 using Paint.Classes;
 using System;
-using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Reflection;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 

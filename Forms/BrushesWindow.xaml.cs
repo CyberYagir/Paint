@@ -36,7 +36,7 @@ namespace Paint.Forms
             {
                 nameText = "New_Brush_" + (brushesList.Count + offcet);
                 offcet++;
-            } while (brushesList.Find(x=>x.Name == nameText) != null);
+            } while (brushesList.Find(x => x.Name == nameText) != null);
 
             NameBrush.Text = nameText;
         }

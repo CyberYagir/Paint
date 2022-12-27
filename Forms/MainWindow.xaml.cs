@@ -1,7 +1,6 @@
 ﻿using Paint.Classes;
 using Paint.Forms;
 using System.Windows;
-using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
@@ -56,7 +55,7 @@ namespace Paint
             AddAllHotKeys();
 
             PaintManager.SetInstrumentsList(AddonsLoader.GetTools().AllItems);
-            CurrentBrush = BrushesManager.GetBrushes().Find(x=>x.Name == "Standard");
+            CurrentBrush = BrushesManager.GetBrushes().Find(x => x.Name == "Standard");
 
 
             StartWindowConfiguration();
@@ -111,7 +110,7 @@ namespace Paint
             BrushImage.Opacity = ColorPicker.Color.A / 255;
             BrushImage.Effect = new DropShadowEffect()
             {
-                Opacity = (0.2f/ BrushImage.Opacity)
+                Opacity = (0.2f / BrushImage.Opacity)
             };
 
             if (pos != null)

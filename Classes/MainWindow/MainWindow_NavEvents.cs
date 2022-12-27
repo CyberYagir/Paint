@@ -1,7 +1,6 @@
 ﻿using Paint.Classes;
 using System;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 namespace Paint
@@ -59,11 +58,11 @@ namespace Paint
 
         private void Window_MouseMove(object sender, MouseEventArgs e)
         {
-                var framePos = new YVector(e.GetPosition(GridFrame));
-                var imagePos = new YVector(e.GetPosition(MainImage));
-                PaintManager.Update(imagePos, framePos, ColorPicker.SelectedColor, e, isOverSidebar);
-                var pos = new YVector(e.GetPosition(GridFrame));
-                SetBrushImage(pos);
+            var framePos = new YVector(e.GetPosition(GridFrame));
+            var imagePos = new YVector(e.GetPosition(MainImage));
+            PaintManager.Update(imagePos, framePos, ColorPicker.SelectedColor, e, isOverSidebar);
+            var pos = new YVector(e.GetPosition(GridFrame));
+            SetBrushImage(pos);
         }
 
         private void UpdateFill(YVector pos)
