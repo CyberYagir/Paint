@@ -1,0 +1,13 @@
+C:\Users\Yaroslav\source\repos\Brush\bin\Debug\netcoreapp3.0\StartBrushes.deps.json
+C:\Users\Yaroslav\source\repos\Brush\bin\Debug\netcoreapp3.0\StartBrushes.dll
+C:\Users\Yaroslav\source\repos\Brush\bin\Debug\netcoreapp3.0\StartBrushes.pdb
+C:\Users\Yaroslav\source\repos\Brush\bin\Debug\netcoreapp3.0\Paint.exe
+C:\Users\Yaroslav\source\repos\Brush\bin\Debug\netcoreapp3.0\Paint.exe.config
+C:\Users\Yaroslav\source\repos\Brush\obj\Debug\netcoreapp3.0\StartBrushes.csproj.AssemblyReference.cache
+C:\Users\Yaroslav\source\repos\Brush\obj\Debug\netcoreapp3.0\StartBrushes.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Yaroslav\source\repos\Brush\obj\Debug\netcoreapp3.0\StartBrushes.AssemblyInfoInputs.cache
+C:\Users\Yaroslav\source\repos\Brush\obj\Debug\netcoreapp3.0\StartBrushes.AssemblyInfo.cs
+C:\Users\Yaroslav\source\repos\Brush\obj\Debug\netcoreapp3.0\StartBrushes.csproj.CoreCompileInputs.cache
+C:\Users\Yaroslav\source\repos\Brush\obj\Debug\netcoreapp3.0\StartBrushes.csproj.CopyComplete
+C:\Users\Yaroslav\source\repos\Brush\obj\Debug\netcoreapp3.0\StartBrushes.dll
+C:\Users\Yaroslav\source\repos\Brush\obj\Debug\netcoreapp3.0\StartBrushes.pdb

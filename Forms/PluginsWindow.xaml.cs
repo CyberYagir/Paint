@@ -6,9 +6,6 @@ using System.Windows.Media;
 
 namespace Paint.Forms
 {
-    /// <summary>
-    /// Логика взаимодействия для Window1.xaml
-    /// </summary>
     public partial class PluginsWindow : Window
     {
         MainWindow window;

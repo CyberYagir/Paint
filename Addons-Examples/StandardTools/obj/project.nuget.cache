@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "qbjPxUV2dg8ytnVBYpKPO579v5IhimeJ8yjh/dSzz8g76d+YqGAWwFhxdYAJ1BS7FQ5CEbPrYQ7/6sNlnHAgNA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Yaroslav\\source\\repos\\Paint\\Addons-Examples\\StandardTools\\StandardTools.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Yaroslav\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\3.0.1\\microsoft.aspnetcore.app.ref.3.0.1.nupkg.sha512",
+    "C:\\Users\\Yaroslav\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\3.0.0\\microsoft.windowsdesktop.app.ref.3.0.0.nupkg.sha512",
+    "C:\\Users\\Yaroslav\\.nuget\\packages\\microsoft.netcore.app.ref\\3.0.0\\microsoft.netcore.app.ref.3.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

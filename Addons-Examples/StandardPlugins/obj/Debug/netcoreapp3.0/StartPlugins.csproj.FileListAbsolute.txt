@@ -1,0 +1,13 @@
+C:\Users\Yaroslav\source\repos\StartPlugins\bin\Debug\netcoreapp3.0\StartPlugins.deps.json
+C:\Users\Yaroslav\source\repos\StartPlugins\bin\Debug\netcoreapp3.0\StartPlugins.dll
+C:\Users\Yaroslav\source\repos\StartPlugins\bin\Debug\netcoreapp3.0\StartPlugins.pdb
+C:\Users\Yaroslav\source\repos\StartPlugins\bin\Debug\netcoreapp3.0\Paint.exe
+C:\Users\Yaroslav\source\repos\StartPlugins\bin\Debug\netcoreapp3.0\Paint.exe.config
+C:\Users\Yaroslav\source\repos\StartPlugins\obj\Debug\netcoreapp3.0\StartPlugins.csproj.AssemblyReference.cache
+C:\Users\Yaroslav\source\repos\StartPlugins\obj\Debug\netcoreapp3.0\StartPlugins.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Yaroslav\source\repos\StartPlugins\obj\Debug\netcoreapp3.0\StartPlugins.AssemblyInfoInputs.cache
+C:\Users\Yaroslav\source\repos\StartPlugins\obj\Debug\netcoreapp3.0\StartPlugins.AssemblyInfo.cs
+C:\Users\Yaroslav\source\repos\StartPlugins\obj\Debug\netcoreapp3.0\StartPlugins.csproj.CoreCompileInputs.cache
+C:\Users\Yaroslav\source\repos\StartPlugins\obj\Debug\netcoreapp3.0\StartPlugins.csproj.CopyComplete
+C:\Users\Yaroslav\source\repos\StartPlugins\obj\Debug\netcoreapp3.0\StartPlugins.dll
+C:\Users\Yaroslav\source\repos\StartPlugins\obj\Debug\netcoreapp3.0\StartPlugins.pdb
