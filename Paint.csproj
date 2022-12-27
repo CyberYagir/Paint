@@ -36,7 +36,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>Program\</OutputPath>
+    <OutputPath>Program\Data\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -74,6 +74,10 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="StandardPlugins, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Plugins\StandardPlugins.dll</HintPath>
     </Reference>
     <Reference Include="StandardTools, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -119,14 +123,20 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Classes\Addons\AddonsLoader_LoadedDataCollector.cs" />
+    <Compile Include="Classes\Addons\AddonsLoader_LoadedToolData.cs" />
     <Compile Include="Classes\ArrayConverter.cs" />
     <Compile Include="Classes\BrushesManager.cs" />
     <Compile Include="Classes\FilterGenerator.cs" />
     <Compile Include="Classes\Debug.cs" />
     <Compile Include="Classes\HotKeysManager.cs" />
-    <Compile Include="Classes\ToolsLoader.cs" />
-    <Compile Include="Classes\Instruments\Tool.cs" />
+    <Compile Include="Classes\Addons\AddonsLoader.cs" />
+    <Compile Include="Classes\Instruments\ILoadable.cs" />
     <Compile Include="Classes\Instruments\IPlugin.cs" />
+    <Compile Include="Classes\Instruments\LoadableItem.cs" />
+    <Compile Include="Classes\Instruments\Plugin.cs" />
+    <Compile Include="Classes\Instruments\Tool.cs" />
+    <Compile Include="Classes\Instruments\ITool.cs" />
     <Compile Include="Classes\LocalFileSystem.cs" />
     <Compile Include="Classes\MainWindow\MainWindow_HotKeys.cs" />
     <Compile Include="Classes\MainWindow\MainWindow_MenuEvents.cs" />
@@ -219,6 +229,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Plugins\StandardTools.dll" />
+    <Content Include="Plugins\StandardPlugins.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
@@ -226,7 +237,7 @@
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>; Move all assemblies and related files to lib folder
+    <PostBuildEvent>; Move all assemblies and related files to Bin folder
 ROBOCOPY "$(TargetDir) " "$(TargetDir)Bin\ " /XF *.exe *.config *.manifest /XD Bin logs data /E /IS /MOVE
 if %25errorlevel%25 leq 4 exit 0 else exit %25errorlevel%25</PostBuildEvent>
   </PropertyGroup>

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Paint.Classes.Instruments
 {
-    public interface IPlugin
+    public interface IPlugin : ILoadable
     {
     }
 }

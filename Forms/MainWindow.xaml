@@ -14,7 +14,7 @@
     </Window.Background>
 
     <Grid>
-        <Menu x:Name="menu" Height="18" VerticalAlignment="Top" Background="#FF333333" Panel.ZIndex="4" Margin="0,0,0.333,0">
+        <Menu x:Name="MainMenu" Height="18" VerticalAlignment="Top" Background="#FF333333" Panel.ZIndex="4" Margin="0,0,0.333,0">
             <MenuItem Header="File" Height="18" Width="37" Foreground="White">
                 <MenuItem InputGestureText="Ctrl+O"  Header="Open.." Foreground="#FF0A0A0A" Click="OpenFile"/>
                 <MenuItem InputGestureText="Ctrl+N" Header="Create new.." Foreground="#FF0A0A0A" Click="Createbtn_Click"/>
@@ -33,15 +33,15 @@
             </MenuItem>
             <MenuItem Foreground="White" Header="Help">
                 <MenuItem Foreground="#FF0A0A0A" Header="Creator" Click="CreatorButton"/>
-                <MenuItem Foreground="#FF0A0A0A" Header="Sources" Click="GitHub"/>
+                <MenuItem InputGestureText=".NET Framework 4.5.1"  Foreground="#FF0A0A0A" Header="Sources" Click="GitHub"/>
             </MenuItem>
         </Menu>
-        <Border BorderBrush="Black" BorderThickness="1" Margin="126,0,0.333,0" VerticalAlignment="Top" Panel.ZIndex="1" Height="18">
+        <Border x:Name="UpShadow" BorderBrush="Black" BorderThickness="1" Margin="126,0,0.333,0" VerticalAlignment="Top" Panel.ZIndex="1" Height="18">
             <Border.Effect>
                 <DropShadowEffect ShadowDepth="2"/>
             </Border.Effect>
         </Border>
-        <Grid x:Name="frame" Margin="126,18,0.333,-0.333" MouseRightButtonDown="frame_MouseRightButtonDown" MouseRightButtonUp="frame_MouseRightButtonUp" MouseWheel="frame_MouseWheel" MouseMove="Window_MouseMove" MouseLeave="frame_MouseLeave" Grid.RowSpan="2" Background="#00000000" MouseLeftButtonDown="frame_MouseLeftButtonDown" MouseLeftButtonUp="frame_MouseLeftButtonUp">
+        <Grid x:Name="GridFrame" Margin="126,18,0.333,-0.333" MouseRightButtonDown="frame_MouseRightButtonDown" MouseRightButtonUp="frame_MouseRightButtonUp" MouseWheel="frame_MouseWheel" MouseMove="Window_MouseMove" MouseLeave="frame_MouseLeave" Grid.RowSpan="2" Background="#00000000" MouseLeftButtonDown="frame_MouseLeftButtonDown" MouseLeftButtonUp="frame_MouseLeftButtonUp">
 
 
             <Image x:Name="MainImage" Height="204" Width="280" RenderTransformOrigin="0.5,0.5" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Stretch="Fill" RenderOptions.BitmapScalingMode="NearestNeighbor">
@@ -52,21 +52,21 @@
             <Image x:Name="BrushImage" RenderOptions.BitmapScalingMode="NearestNeighbor" HorizontalAlignment="Left" Height="128" Margin="0" VerticalAlignment="Top" Width="128" Source="/Paint;component/Images/Brush1.png"/>
             <Image x:Name="FillImage" RenderOptions.BitmapScalingMode="NearestNeighbor" HorizontalAlignment="Left" Height="49" Margin="201,49,0,0" VerticalAlignment="Top" Width="49" Source="/Paint;component/Images/FillCursor.png"/>
         </Grid>
-        <StackPanel x:Name="UndoRendoDebug" Height="956" Margin="671,23,0,-558.333" VerticalAlignment="Top" Width="100" HorizontalAlignment="Right" Visibility="Hidden">
+        <!--<StackPanel x:Name="UndoRendoDebug" Height="956" Margin="671,23,0,-558.333" VerticalAlignment="Top" Width="100" HorizontalAlignment="Right" Visibility="Hidden">
             <Image x:Name="image" Height="100" Stretch="UniformToFill" Source="/Paint;component/Images/Brush1.png"/>
-            <Image x:Name="image_Copy" Height="100" Stretch="UniformToFill"/>
-            <Image x:Name="image_Copy1" Height="100" Stretch="UniformToFill"/>
-            <Image x:Name="image_Copy2" Height="100" Stretch="UniformToFill"/>
-            <Image x:Name="image_Copy3" Height="100" Stretch="UniformToFill"/>
-            <Image x:Name="image_Copy4" Height="100" Stretch="UniformToFill"/>
-            <Image x:Name="image_Copy5" Height="100" Stretch="UniformToFill"/>
-            <Image x:Name="image_Copy6" Height="100" Stretch="UniformToFill"/>
-            <Image x:Name="image_Copy7" Height="100" Stretch="UniformToFill"/>
-            <Image x:Name="image_Copy8" Height="100" Stretch="UniformToFill"/>
-            <Image x:Name="image_Copy9" Height="100" Stretch="UniformToFill"/>
-        </StackPanel>
-        <ScrollViewer Margin="0,18,0,-0.333" Background="#FF1E1E1E" HorizontalAlignment="Left" Width="126" VerticalScrollBarVisibility="Hidden">
-            <StackPanel HorizontalAlignment="Left" Width="126" Panel.ZIndex="1" CanVerticallyScroll="True" ScrollViewer.CanContentScroll="True" UseLayoutRounding="False" ScrollViewer.VerticalScrollBarVisibility="Hidden" Height="403" VerticalAlignment="Top">
+            <Image x:Name="image_Copy" Height="100" Stretch="UniformToFill" x:FieldModifier="Private"/>
+            <Image x:Name="image_Copy1" Height="100" Stretch="UniformToFill" x:FieldModifier="Private"/>
+            <Image x:Name="image_Copy2" Height="100" Stretch="UniformToFill" x:FieldModifier="Private"/>
+            <Image x:Name="image_Copy3" Height="100" Stretch="UniformToFill" x:FieldModifier="Private"/>
+            <Image x:Name="image_Copy4" Height="100" Stretch="UniformToFill" x:FieldModifier="Private"/>
+            <Image x:Name="image_Copy5" Height="100" Stretch="UniformToFill" x:FieldModifier="Private"/>
+            <Image x:Name="image_Copy6" Height="100" Stretch="UniformToFill" x:FieldModifier="Private"/>
+            <Image x:Name="image_Copy7" Height="100" Stretch="UniformToFill" x:FieldModifier="Private"/>
+            <Image x:Name="image_Copy8" Height="100" Stretch="UniformToFill" x:FieldModifier="Private"/>
+            <Image x:Name="image_Copy9" Height="100" Stretch="UniformToFill" x:FieldModifier="Private"/>
+        </StackPanel>-->
+        <ScrollViewer x:Name="LeftPanel" Margin="0,18,0,-0.333" Background="#FF1E1E1E" HorizontalAlignment="Left" Width="126" VerticalScrollBarVisibility="Hidden">
+            <StackPanel x:Name="LeftPanelHolder" HorizontalAlignment="Left" Width="126" Panel.ZIndex="1" CanVerticallyScroll="True" ScrollViewer.CanContentScroll="True" UseLayoutRounding="False" ScrollViewer.VerticalScrollBarVisibility="Hidden" Height="403" VerticalAlignment="Top" MouseEnter="LeftPanelHolder_MouseEnter" MouseLeave="LeftPanelHolder_MouseLeave">
                 <StackPanel.Effect>
                     <DropShadowEffect ShadowDepth="1"/>
                 </StackPanel.Effect>
@@ -92,7 +92,7 @@
                 <StackPanel Height="61">
                     <Grid Height="100">
                         <Border BorderBrush="#FFACACAC" BorderThickness="0.5,0.5,0,0.5" Background="White" Margin="6,0" VerticalAlignment="Top" Height="22"/>
-                        <Label x:Name="label_Copy1" Content="Brush Type" Margin="6,0" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="9"/>
+                        <Label x:Name="BrushTypeText" Content="Brush Type" Margin="6,0" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="9"/>
                         <Button x:Name="SelectBrushButton" Content="Select" Margin="6,27,76,56" Click="SelectBrushButton_Click" Foreground="#FFE6E6E6" Background="#FFF2F2F2"/>
                         <Image x:Name="BrushPreview" HorizontalAlignment="Left" Height="53" VerticalAlignment="Top" Width="52" Source="/Paint;component/Images/Brush1.png" Margin="64,5,0,0">
                             <Image.Effect>

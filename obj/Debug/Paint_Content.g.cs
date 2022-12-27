@@ -9,5 +9,6 @@
 //------------------------------------------------------------------------------
 
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("plugins/standardtools.dll")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("plugins/standardplugins.dll")]
 
 

@@ -13,6 +13,9 @@ namespace Paint.Forms
     {
         MainWindow window;
         DisplayState state = DisplayState.All;
+
+        string wihiteSpace = "          ";
+
         public enum DisplayState
         {
             All, Tools, Plugins
@@ -31,15 +34,44 @@ namespace Paint.Forms
         public void UpdateList()
         {
             listBox.Items.Clear();
+
+
+            CreateListItem($"Loaded: ", null);
+            CreateListItem(wihiteSpace + $"Tools: {window.AddonsLoader.GetTools().LoadedData.Count}", null);
+            CreateListItem(wihiteSpace + $"Plugins: {window.AddonsLoader.GetPlugins().LoadedData.Count}", null);
+
             if (state == DisplayState.All || state == DisplayState.Tools)
             {
-                foreach (var item in window.InstrumentsLoader.LoadedData())
+                DrawTools();
+            }
+            if (state == DisplayState.All || state == DisplayState.Plugins)
+            {
+                DrawPlugins();
+            }
+        }
+
+        public void DrawTools()
+        {
+            var items = window.AddonsLoader.GetTools().LoadedData;
+            foreach (var item in items)
+            {
+                CreateListItem($"File: {Path.GetFileNameWithoutExtension(item.File)}", item.File);
+                foreach (var tool in item.Items)
                 {
-                    CreateListItem($"File: {Path.GetFileNameWithoutExtension(item.File)}", item.File);
-                    foreach (var instrument in item.Items)
-                    {
-                        CreateListItem($"          Tool:{instrument.InstrumentName}", item.File).IsEnabled = false; ;
-                    }
+                    CreateListItem(wihiteSpace + $"Tool: {tool.Name}", item.File).IsEnabled = false; ;
+                }
+            }
+        }
+
+        public void DrawPlugins()
+        {
+            var items = window.AddonsLoader.GetPlugins().LoadedData;
+            foreach (var item in items)
+            {
+                CreateListItem($"File: {Path.GetFileNameWithoutExtension(item.File)}", item.File);
+                foreach (var instrument in item.Items)
+                {
+                    CreateListItem(wihiteSpace + $"Plugin: {instrument.Name}", item.File).IsEnabled = false; ;
                 }
             }
         }
@@ -52,8 +84,11 @@ namespace Paint.Forms
             listItem.FontSize = 16;
             listItem.MouseUp += (a, e) =>
             {
-                string argument = "/select, \"" + Path.GetFullPath(path) + "\"";
-                System.Diagnostics.Process.Start("explorer.exe", argument);
+                if (!string.IsNullOrEmpty(path))
+                {
+                    string argument = "/select, \"" + Path.GetFullPath(path) + "\"";
+                    System.Diagnostics.Process.Start("explorer.exe", argument);
+                }
             };
             listBox.Items.Add(listItem);
 
@@ -63,7 +98,7 @@ namespace Paint.Forms
 
         private void OpenFolder_Click(object sender, RoutedEventArgs e)
         {
-            OpenPath(window.InstrumentsLoader.Folder);
+            OpenPath(window.AddonsLoader.Folder);
         }
 
         public void OpenPath(string path)

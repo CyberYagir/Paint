@@ -88,7 +88,7 @@ namespace Paint
             fillPrecision = val;
         }
 
-        public void Update(YVector imageMousePos, YVector frameMousePos, Color color, MouseEventArgs e)
+        public void Update(YVector imageMousePos, YVector frameMousePos, Color color, MouseEventArgs e, bool overSideBar)
         {
             lastLocalImageMousePos = imageMousePos;
             lastLocalRectMousePos = frameMousePos;
@@ -96,9 +96,12 @@ namespace Paint
             switch (state)
             {
                 case State.Paint:
-                    if (e.LeftButton == MouseButtonState.Pressed)
+                    if (!overSideBar)
                     {
-                        CallInstrument(lastLocalImageMousePos);
+                        if (e.LeftButton == MouseButtonState.Pressed)
+                        {
+                            CallInstrument(lastLocalImageMousePos);
+                        }
                     }
                     break;
                 case State.Moving:
@@ -112,7 +115,7 @@ namespace Paint
 
         public void CallInstrument(YVector pos)
         {
-            var instrument = instrumentsList.Find(x => x.InstrumentName == currentInstrument);
+            var instrument = instrumentsList.Find(x => x.Name == currentInstrument);
 
             if (instrument != null)
             {
@@ -443,9 +446,22 @@ namespace Paint
 
         public WriteableBitmap GetBitMap()
         {
-            bitmapImage = bitmapImage.Clone();
-            mainImage.Source = bitmapImage;
-            return bitmapImage.Clone();
+            if (bitmapImage != null)
+            {
+                bitmapImage = bitmapImage.Clone();
+                mainImage.Source = bitmapImage;
+                return bitmapImage.Clone();
+            }
+            return null;
+        }
+
+        public WriteableBitmap GetOrginalBitmap()
+        {
+            if (bitmapImage != null)
+            {
+                return bitmapImage;
+            }
+            return null;
         }
 
         public double Clamp(double val, double min, double max)

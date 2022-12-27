@@ -49,3 +49,16 @@ C:\Users\Yaroslav\source\repos\Paint\Program\Microsoft.Xaml.Behaviors.pdb
 C:\Users\Yaroslav\source\repos\Paint\Program\Microsoft.Xaml.Behaviors.xml
 C:\Users\Yaroslav\source\repos\Paint\Program\Newtonsoft.Json.xml
 C:\Users\Yaroslav\source\repos\Paint\Program\StandardTools.dll
+C:\Users\Yaroslav\source\repos\Paint\Program\StandardPlugins.dll
+C:\Users\Yaroslav\source\repos\Paint\Program\Data\Paint.exe.config
+C:\Users\Yaroslav\source\repos\Paint\Program\Data\Paint.exe
+C:\Users\Yaroslav\source\repos\Paint\Program\Data\Paint.pdb
+C:\Users\Yaroslav\source\repos\Paint\Program\Data\ColorPicker.dll
+C:\Users\Yaroslav\source\repos\Paint\Program\Data\Microsoft.Xaml.Behaviors.dll
+C:\Users\Yaroslav\source\repos\Paint\Program\Data\Newtonsoft.Json.dll
+C:\Users\Yaroslav\source\repos\Paint\Program\Data\StandardPlugins.dll
+C:\Users\Yaroslav\source\repos\Paint\Program\Data\StandardTools.dll
+C:\Users\Yaroslav\source\repos\Paint\Program\Data\System.Memory.dll
+C:\Users\Yaroslav\source\repos\Paint\Program\Data\Microsoft.Xaml.Behaviors.pdb
+C:\Users\Yaroslav\source\repos\Paint\Program\Data\Microsoft.Xaml.Behaviors.xml
+C:\Users\Yaroslav\source\repos\Paint\Program\Data\Newtonsoft.Json.xml

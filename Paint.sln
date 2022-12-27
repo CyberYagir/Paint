@@ -5,7 +5,11 @@ VisualStudioVersion = 16.0.32106.194
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paint", "Paint.csproj", "{50A830D0-4C8B-43F9-9736-F4DE0DC82D42}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StartBrushes", "..\Brush\StartBrushes.csproj", "{9DB62764-408F-4C76-A8ED-7D9DE1C380F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StandardTools", "..\Brush\StandardTools.csproj", "{9DB62764-408F-4C76-A8ED-7D9DE1C380F8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StandardPlugins", "..\StartPlugins\StandardPlugins.csproj", "{18C2737D-C599-41E1-B956-2F764F6AE926}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrightnessPlugin", "..\BrightnessPlugin\BrightnessPlugin\BrightnessPlugin.csproj", "{17C35DB3-CEC9-424F-93E7-1B8B7E5B20E4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{9DB62764-408F-4C76-A8ED-7D9DE1C380F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9DB62764-408F-4C76-A8ED-7D9DE1C380F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9DB62764-408F-4C76-A8ED-7D9DE1C380F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18C2737D-C599-41E1-B956-2F764F6AE926}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18C2737D-C599-41E1-B956-2F764F6AE926}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18C2737D-C599-41E1-B956-2F764F6AE926}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18C2737D-C599-41E1-B956-2F764F6AE926}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17C35DB3-CEC9-424F-93E7-1B8B7E5B20E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17C35DB3-CEC9-424F-93E7-1B8B7E5B20E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17C35DB3-CEC9-424F-93E7-1B8B7E5B20E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17C35DB3-CEC9-424F-93E7-1B8B7E5B20E4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

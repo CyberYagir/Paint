@@ -26,7 +26,7 @@ namespace Paint
         }
         private void frame_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            var framePos = new YVector(e.GetPosition(frame));
+            var framePos = new YVector(e.GetPosition(GridFrame));
             PaintManager.SetStartPos(framePos);
             PaintManager.SetState(PaintManager.State.Moving);
 
@@ -43,27 +43,31 @@ namespace Paint
         public void UpdateUndoRendoDebug()
         {
             return;
-            var list = UndoRendo.Bitmaps;
-            for (int i = 0; i < UndoRendoDebug.Children.Count; i++)
-            {
-                if (i < list.Count)
-                {
-                    (UndoRendoDebug.Children[i] as Image).Source = list[i];
-                }
-                else
-                {
-                    (UndoRendoDebug.Children[i] as Image).Source = null;
-                }
-            }
+            //var list = UndoRendo.Bitmaps;
+            //for (int i = 0; i < UndoRendoDebug.Children.Count; i++)
+            //{
+            //    if (i < list.Count)
+            //    {
+            //        (UndoRendoDebug.Children[i] as Image).Source = list[i];
+            //    }
+            //    else
+            //    {
+            //        (UndoRendoDebug.Children[i] as Image).Source = null;
+            //    }
+            //}
         }
 
         private void Window_MouseMove(object sender, MouseEventArgs e)
         {
-            var framePos = new YVector(e.GetPosition(frame));
-            var imagePos = new YVector(e.GetPosition(MainImage));
-            PaintManager.Update(imagePos, framePos, ColorPicker.SelectedColor, e);
-            var pos = new YVector(e.GetPosition(frame));
-            SetBrushImage(pos);
+                var framePos = new YVector(e.GetPosition(GridFrame));
+                var imagePos = new YVector(e.GetPosition(MainImage));
+                PaintManager.Update(imagePos, framePos, ColorPicker.SelectedColor, e, isOverSidebar);
+                var pos = new YVector(e.GetPosition(GridFrame));
+                SetBrushImage(pos);
+        }
+
+        private void UpdateFill(YVector pos)
+        {
             if (PaintManager.CurrentInstrument == "Fill")
             {
                 FillImage.Width = 30;
@@ -71,6 +75,7 @@ namespace Paint
                 FillImage.Margin = new Thickness((pos.X - FillImage.Width / 2f) + FillImage.Width, (pos.Y - FillImage.Height / 2f) + FillImage.Height, 0, 0);
             }
         }
+
         private void frame_MouseLeave(object sender, MouseEventArgs e)
         {
             PaintManager.SetState(PaintManager.State.Paint);
@@ -78,7 +83,7 @@ namespace Paint
         private void frame_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             PaintManager.Scale(e.Delta);
-            SetBrushImage(new YVector(Mouse.GetPosition(frame)));
+            SetBrushImage(new YVector(Mouse.GetPosition(GridFrame)));
 
         }
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -91,10 +96,9 @@ namespace Paint
         private void frame_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
 
-            var framePos = new YVector(e.GetPosition(frame));
+            var framePos = new YVector(e.GetPosition(GridFrame));
             var imagePos = new YVector(e.GetPosition(MainImage));
-            PaintManager.Update(imagePos, framePos, ColorPicker.SelectedColor, e);
-
+            PaintManager.Update(imagePos, framePos, ColorPicker.SelectedColor, e, isOverSidebar);
         }
 
         private void Undo_Click(object sender, RoutedEventArgs e)
@@ -106,6 +110,16 @@ namespace Paint
         {
             UndoRendo.Redo();
             UpdateUndoRendoDebug();
+        }
+
+        private void LeftPanelHolder_MouseEnter(object sender, MouseEventArgs e)
+        {
+            isOverSidebar = true;
+        }
+
+        private void LeftPanelHolder_MouseLeave(object sender, MouseEventArgs e)
+        {
+            isOverSidebar = false;
         }
     }
 }

@@ -51,7 +51,7 @@ namespace Paint.Classes
 
             public bool LoadBrush(string fileName, LocalFileSystem localFileSystem)
             {
-                var path = System.IO.Path.GetFullPath(localFileSystem.GetFullPath(fileName));
+                var path = localFileSystem.GetFullPath(fileName);
                 if (File.Exists(path))
                 {
                     brush = new Bitmap(path);

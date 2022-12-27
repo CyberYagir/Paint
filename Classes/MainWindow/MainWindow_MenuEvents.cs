@@ -38,7 +38,7 @@ namespace Paint
             OpenPlugins(PluginsWindow.DisplayState.Tools);
         }
 
-        private void OpenPlugins(object sender, RoutedEventArgs e)
+        public void OpenPlugins(object sender, RoutedEventArgs e)
         {
             OpenPlugins(PluginsWindow.DisplayState.Plugins);
         }

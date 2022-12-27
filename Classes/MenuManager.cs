@@ -1,8 +1,11 @@
 ﻿using Microsoft.Win32;
+using Paint.Classes;
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Reflection;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 
@@ -11,10 +14,68 @@ namespace Paint
     public class MenuManager
     {
         private MainWindow mainWindow;
-        public MenuManager(MainWindow main)
+        private AddonsLoader addonsLoader;
+
+        public MenuManager(MainWindow main, AddonsLoader addonsLoader)
         {
             this.mainWindow = main;
+            this.addonsLoader = addonsLoader;
+            DrawPluginsButtons();
         }
+
+
+        public void DrawPluginsButtons()
+        {
+
+            var addonsItem = FindMenuItem(mainWindow.MainMenu.Items, "Addons");
+            if (addonsItem != null)
+            {
+                var pluginsItem = FindMenuItem(addonsItem.Items, "Plugins");
+                if (pluginsItem != null)
+                {
+                    pluginsItem.Items.Clear();
+                    var items = addonsLoader.GetPlugins().AllItems;
+                    if (items.Count != 0)
+                    {
+                        pluginsItem.Click -= mainWindow.OpenPlugins;
+                    }
+                    for (int i = 0; i < items.Count; i++)
+                    {
+                        var menuItem = new MenuItem()
+                        {
+                            Header = items[i].Name,
+                            Foreground = pluginsItem.Foreground
+                        };
+                        int localID = i;
+                        menuItem.Click += (a, e) =>
+                        {
+                            mainWindow.UndoRendo.AddAction();
+                            items[localID].Call();
+                        };
+
+                        pluginsItem.Items.Add(menuItem);
+                    }
+                }
+            }
+
+
+            MenuItem FindMenuItem(ItemCollection itemCollection, string name)
+            {
+                foreach (var item in itemCollection)
+                {
+                    var menuItem = item as MenuItem;
+                    if (menuItem != null && menuItem.Header is string)
+                    {
+                        if ((string)menuItem.Header == name)
+                        {
+                            return menuItem;
+                        }
+                    }
+                }
+                return null;
+            }
+        }
+
 
         public void OpenFile()
         {
@@ -59,7 +120,7 @@ namespace Paint
             }
         }
 
-        
+
 
         public void SaveFile(System.Windows.Media.ImageSource source)
         {
@@ -79,27 +140,28 @@ namespace Paint
                     using (FileStream stream = new FileStream(saveFileDialog.FileName, FileMode.Create))
                     {
                         BitmapEncoder enc = null;
+                        Debug.Log(saveFileDialog.FilterIndex);
                         switch (saveFileDialog.FilterIndex)
                         {
-                            case 0:
-                                enc = new JpegBitmapEncoder();
-                                break;
                             case 1:
                                 enc = new JpegBitmapEncoder();
                                 break;
                             case 2:
-                                enc = new PngBitmapEncoder();
+                                enc = new JpegBitmapEncoder();
                                 break;
                             case 3:
-                                enc = new BmpBitmapEncoder();
+                                enc = new PngBitmapEncoder();
                                 break;
                             case 4:
-                                enc = new GifBitmapEncoder();
+                                enc = new BmpBitmapEncoder();
                                 break;
                             case 5:
-                                enc = new TiffBitmapEncoder();
+                                enc = new GifBitmapEncoder();
                                 break;
                             case 6:
+                                enc = new TiffBitmapEncoder();
+                                break;
+                            case 7:
                                 enc = new WmpBitmapEncoder();
                                 break;
                         }

@@ -16,13 +16,13 @@ namespace Paint
         public LocalFileSystem LocalSystem { get; private set; }
         public BrushesManager BrushesManager { get; private set; }
         public UndoRendo UndoRendo { get; private set; }
-        public ToolsLoader InstrumentsLoader { get; private set; }
+        public AddonsLoader AddonsLoader { get; private set; }
         public HotKeysManager KeysManager { get; private set; }
 
 
         BrushesManager.Brush brush;
         DispatcherTimer timer;
-
+        bool isOverSidebar;
         public BrushesManager.Brush CurrentBrush
         {
             get
@@ -44,22 +44,25 @@ namespace Paint
             InitializeComponent();
             LocalSystem = new LocalFileSystem();
 
-            MenuManager = new MenuManager(this);
-            PaintManager = new PaintManager(MainImage, frame, this);
+            PaintManager = new PaintManager(MainImage, GridFrame, this);
 
-            InstrumentsLoader = new ToolsLoader(LocalSystem, this);
+            AddonsLoader = new AddonsLoader(LocalSystem, this);
 
+            MenuManager = new MenuManager(this, AddonsLoader);
             BrushesManager = new BrushesManager(LocalSystem);
             UndoRendo = new UndoRendo(PaintManager);
 
             KeysManager = new HotKeysManager();
             AddAllHotKeys();
 
-            PaintManager.SetInstrumentsList(InstrumentsLoader.GetInstruments());
+            PaintManager.SetInstrumentsList(AddonsLoader.GetTools().AllItems);
             CurrentBrush = BrushesManager.GetBrushes().Find(x=>x.Name == "Standard");
 
 
             StartWindowConfiguration();
+
+
+            AddonsLoader.PluginsAfterWindowLoaded();
         }
 
 
@@ -122,7 +125,5 @@ namespace Paint
         {
             KeysManager.CheckHotKeys(e);
         }
-
-
     }
 }

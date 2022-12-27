@@ -1,9 +1,7 @@
 ﻿using Paint.Classes;
-using System;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -17,12 +15,22 @@ namespace Paint.Forms
     {
         MainWindow mainWindow;
 
-        YVector size = new YVector();
+        YVector size = new YVector(1000, 1000);
 
         public CreateAtlasWindow(MainWindow main)
         {
             InitializeComponent();
             mainWindow = main;
+
+            var image = mainWindow.PaintManager.GetBitMap();
+
+            if (image != null)
+            {
+                size = new YVector(image.PixelWidth, image.PixelHeight);
+                WidthTextBox.Text = image.PixelWidth.ToString();
+                HeightTextBox.Text = image.PixelHeight.ToString();
+                UpdateSize();
+            }
         }
 
 
@@ -56,33 +64,36 @@ namespace Paint.Forms
 
         private void Apply_Click(object sender, RoutedEventArgs e)
         {
-            if (size.XInt == 0 && size.YInt == 0) return;
-            mainWindow.SetMainImage(CreateBlank(size));
+            if (size.XInt == 0 || size.YInt == 0)
+            {
+                MessageBox.Show("The image must be at least one pixel!", "Warning!", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
 
+            mainWindow.SetMainImage(CreateBlank(size));
             Close();
         }
 
-        private void textBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        private void TextChanged(object sender, TextChangedEventArgs e)
         {
+            if (WidthTextBox == null || HeightTextBox == null) return;
+
+            var textBox = sender as TextBox;
+
             if (textBox.Text != "")
             {
-                size.X = int.Parse(textBox.Text.Replace("\n", "").Replace("\r", ""));
+                UpdateSize();
             }
             else
             {
-                size.X = 0;
+                textBox.Text = "1";
             }
         }
-        private void textBox1_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+
+        public void UpdateSize()
         {
-            if (textBox1.Text != "")
-            {
-                size.Y = int.Parse(textBox1.Text.Replace("\n", "").Replace("\r", ""));
-            }
-            else
-            {
-                size.Y = 0;
-            }
+            size.X = int.Parse(WidthTextBox.Text.Replace("\n", "").Replace("\r", ""));
+            size.Y = int.Parse(HeightTextBox.Text.Replace("\n", "").Replace("\r", ""));
         }
     }
 }

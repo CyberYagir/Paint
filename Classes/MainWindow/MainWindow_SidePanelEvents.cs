@@ -17,6 +17,7 @@ namespace Paint
             if (PaintManager.CurrentInstrument != "Fill")
             {
                 PaintManager.SetInstrument("Fill");
+                UpdateFill(new YVector(Mouse.GetPosition(GridFrame)));
             }
             else
             {

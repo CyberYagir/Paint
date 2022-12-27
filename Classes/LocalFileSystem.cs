@@ -8,6 +8,8 @@ namespace Paint.Classes
 {
     public sealed class LocalFileSystem
     {
+        public string Bin { get; private set; }
+
         public string Root { get; private set; }
         public string FileSystemRoot { get; private set; }
         public string BrushesPath { get; private set; }
@@ -20,12 +22,11 @@ namespace Paint.Classes
 
         public LocalFileSystem()
         {
-            Root = System.AppDomain.CurrentDomain.BaseDirectory;
+            Bin = AppDomain.CurrentDomain.BaseDirectory + "/Bin/";
+            Root = AppDomain.CurrentDomain.BaseDirectory;
+            Root = Directory.GetParent(Root).FullName;
+            Root = Directory.GetParent(Root).FullName;
 
-            if (Directory.GetFiles(Root, "*.exe").Length == 0)
-            {
-                Root = Directory.GetParent(Root).FullName;
-            }
 
             FileSystemRoot = "/Assets/";
             BrushesPath = FileSystemRoot + "/Brushes";
