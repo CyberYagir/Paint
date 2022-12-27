@@ -140,7 +140,6 @@ namespace Paint
                     using (FileStream stream = new FileStream(saveFileDialog.FileName, FileMode.Create))
                     {
                         BitmapEncoder enc = null;
-                        Debug.Log(saveFileDialog.FilterIndex);
                         switch (saveFileDialog.FilterIndex)
                         {
                             case 1:
